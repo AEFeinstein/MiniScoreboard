@@ -21,6 +21,7 @@ package com.gelakinetic.miniscoreboard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
@@ -29,6 +30,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
     private View mRootView;
     private FloatingActionButton mFab;
     private ViewPagerAdapter mViewPagerAdapter;
+    private SharedPreferences mSharedPreferences;
+
+    private SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
+            if (prefKey.equals(getString(R.string.pref_key_daily_notification))) {
+                if (mSharedPreferences.getBoolean(prefKey, false)) {
+                    MiniScoreboardAlarm.SetAlarm(MainActivity.this);
+                } else {
+                    MiniScoreboardAlarm.CancelAlarm(MainActivity.this);
+                }
+            }
+        }
+    };
 
     /**
      * TODO
@@ -102,12 +118,21 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
+
         /* Make sure the user is authenticated */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             startActivity(AuthUiActivity.createIntent(this));
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(mListener);
     }
 
     /**

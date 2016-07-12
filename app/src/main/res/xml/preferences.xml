@@ -20,6 +20,10 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="@string/pref_key_daily_notification"
+        android:summary="@string/pref_daily_notification_summary"
+        android:title="@string/pref_daily_notification_title" />
     <Preference
         android:key="@string/pref_key_sign_out_btn"
         android:title="@string/pref_sign_out_title" />
