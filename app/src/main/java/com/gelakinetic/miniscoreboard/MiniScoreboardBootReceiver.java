@@ -33,10 +33,10 @@ public class MiniScoreboardBootReceiver extends BroadcastReceiver {
             if (PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.pref_key_daily_notification), false)) {
                 /* alarm is enabled */
-                MiniScoreboardAlarm.SetAlarm(context);
+                MiniScoreboardAlarm.setAlarm(context);
             } else {
                 /* alarm is disabled */
-                MiniScoreboardAlarm.CancelAlarm(context);
+                MiniScoreboardAlarm.cancelAlarm(context);
             }
         }
     }

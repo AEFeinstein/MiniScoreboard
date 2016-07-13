@@ -61,9 +61,6 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         <receiver
             android:name=".MiniScoreboardAlarm"
             android:enabled="true">
-            <intent-filter>
-                <action android:name="com.gelakinetic.miniscoreboard.DAILY_NOTIFICATION" />
-            </intent-filter>
         </receiver>
 
     </application>

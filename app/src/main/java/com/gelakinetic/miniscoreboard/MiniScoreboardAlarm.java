@@ -25,16 +25,17 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.Calendar;
 
 public class MiniScoreboardAlarm extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 50377;
-    private static final String DAILY_NOTIFICATION_INTENT = "com.gelakinetic.miniscoreboard.DAILY_NOTIFICATION";
 
     /**
      * TODO
@@ -42,8 +43,8 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      * @param context
      * @return
      */
-    public static PendingIntent GetPendingIntent(Context context) {
-        Intent intent = new Intent(DAILY_NOTIFICATION_INTENT);
+    public static PendingIntent getPendingIntent(Context context) {
+        Intent intent = new Intent(context, MiniScoreboardAlarm.class);
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
@@ -52,19 +53,30 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context
      */
-    public static void SetAlarm(Context context) {
+    public static void setAlarm(Context context) {
 
-        /* Set the alarm to start at approximately 12:00 p.m. */
+        /* First, cancel any pending alarms, just in case */
+        cancelAlarm(context);
+
+        /* Set the alarm's trigger to the next noon */
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        /* If noon already passed, set it to tomorrow's noon */
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + (24 * 60 * 60 * 1000));
+        }
 
         /* Set it to repeat daily in an inexact fashion. This saves battery because the system
          * can bunch together alarms
          */
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, GetPendingIntent(context));
+                AlarmManager.INTERVAL_DAY, getPendingIntent(context));
     }
 
     /**
@@ -72,10 +84,10 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context
      */
-    public static void CancelAlarm(Context context) {
+    public static void cancelAlarm(Context context) {
         /* Cancel the alarm by canceling an equivalent pending intent */
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(GetPendingIntent(context));
+        alarmManager.cancel(getPendingIntent(context));
     }
 
     /**
@@ -98,9 +110,19 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_summary))
-                .setContentIntent(contentIntent)
-                .setVibrate(new long[]{0, 500, 500, 500})
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                .setContentIntent(contentIntent);
+
+        SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
+
+        /* If the user has vibration enabled, add a buzz */
+        if (preferenceManager.getBoolean(context.getString(R.string.pref_key_daily_notification_vibrate), false)) {
+            mBuilder = mBuilder.setVibrate(new long[]{0, 500, 500, 500});
+        }
+
+        /* If the user has sounds enabled, add a ding */
+        if (preferenceManager.getBoolean(context.getString(R.string.pref_key_daily_notification_sound), false)) {
+            mBuilder = mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        }
 
         /* Gets an instance of the NotificationManager service */
         NotificationManager mNotifyMgr =
