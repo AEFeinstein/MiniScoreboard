@@ -41,16 +41,31 @@ import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
+import com.gelakinetic.miniscoreboard.fragment.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
+    /* Request code for intents */
     private static final int REQ_CODE_SETTINGS = 52394;
+
+    /* Tags for fragments */
+    public static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
+    private static final String DIALOG_TAG = "DIALOG_TAG";
+
+    /* The user data */
+    private FirebaseUser mCurrentUser;
+
+    /* UI Elements */
     private View mRootView;
     private FloatingActionButton mFab;
     private ViewPagerAdapter mViewPagerAdapter;
+
+    /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
 
     private SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -105,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ScoreInputDialogFragment newFragment = new ScoreInputDialogFragment();
+                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
             }
         });
 
@@ -122,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
 
         /* Make sure the user is authenticated */
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mCurrentUser == null) {
             startActivity(AuthUiActivity.createIntent(this));
             finish();
         }
@@ -248,5 +263,27 @@ public class MainActivity extends AppCompatActivity {
     @MainThread
     public void showSnackbar(@StringRes int errorMessageRes) {
         Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * Submit a user's score to the firebase database
+     *
+     * @param newEntry The DatabaseScoreEntry to submit
+     */
+    public void submitNewScore(DatabaseScoreEntry newEntry) {
+        /* Fill in the user's name */
+        newEntry.mName = mCurrentUser.getDisplayName();
+
+        /* Get a database reference */
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+        /* Submit the data. Only allow one score per day per user */
+        database.child("scores")
+                .child(mCurrentUser.getUid())
+                .child(String.format("%04d-%02d-%02d", newEntry.mYear, newEntry.mMonth, newEntry.mDay))
+                .setValue(newEntry);
+
+        /* Give a little user feedback */
+        showSnackbar(R.string.score_submitted);
     }
 }
