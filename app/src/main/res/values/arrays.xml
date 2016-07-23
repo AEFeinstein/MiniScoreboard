@@ -26,9 +26,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         <item>@string/five_by_five</item>
         <item>@string/seven_by_seven</item>
     </string-array>
-    <string-array name="puzzle_sizes_values">
+    <integer-array name="puzzle_sizes_values">
         <item>5</item>
         <item>7</item>
-    </string-array>
+    </integer-array>
 
 </resources>
