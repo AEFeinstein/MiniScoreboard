@@ -21,6 +21,10 @@ package com.gelakinetic.miniscoreboard;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 @IgnoreExtraProperties
 public class DatabaseScoreEntry {
 
@@ -51,5 +55,27 @@ public class DatabaseScoreEntry {
         this.mPuzzleSize = puzzleSize;
         this.mDate = date;
 
+    }
+
+    /**
+     * TODO
+     *
+     * @return
+     */
+    public String getDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(mDate * 1000);
+        return DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(cal.getTime());
+    }
+
+    /**
+     * TODO
+     *
+     * @return
+     */
+    public String getTime() {
+        int minutes = mPuzzleTime / 60;
+        int seconds = mPuzzleTime % 60;
+        return String.format("%d:%02d", minutes, seconds);
     }
 }

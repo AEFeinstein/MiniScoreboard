@@ -24,4 +24,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimary">#9E9E9E</color>
     <color name="colorPrimaryDark">#616161</color>
     <color name="colorAccent">#448AFF</color>
+
+    <color name="background_color">#F2F2F2</color>
+    <color name="card_color">#FFFFFF</color>
+
 </resources>
