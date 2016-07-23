@@ -26,10 +26,8 @@ public class DatabaseScoreEntry {
 
     /* Fields in the database entry */
     public String mName;
-    public int mTime;
-    public int mDay;
-    public int mMonth;
-    public int mYear;
+    public int mPuzzleTime;
+    public long mDate;
     public int mPuzzleSize;
 
     /**
@@ -43,18 +41,15 @@ public class DatabaseScoreEntry {
      * Constructor which initializes all fields
      *
      * @param name       The user's name for this entry
-     * @param time       The time it took to solve the puzzle
-     * @param day        The day of the month the puzzle was solved
-     * @param month      The month the puzzle was solved
-     * @param year       The year the puzzle was solved
+     * @param puzzleTime The time it took to solve the puzzle
+     * @param date       The day the puzzle was solved, in seconds since the unix epoch
      * @param puzzleSize The size of the solved puzzle (currently 5 or 7)
      */
-    public DatabaseScoreEntry(String name, int time, int day, int month, int year, int puzzleSize) {
+    public DatabaseScoreEntry(String name, int puzzleTime, long date, int puzzleSize) {
         this.mName = name;
-        this.mTime = time;
-        this.mDay = day;
-        this.mMonth = month;
-        this.mYear = year;
+        this.mPuzzleTime = puzzleTime;
         this.mPuzzleSize = puzzleSize;
+        this.mDate = date;
+
     }
 }

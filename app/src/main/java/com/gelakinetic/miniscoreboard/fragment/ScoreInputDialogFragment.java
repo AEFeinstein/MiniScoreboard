@@ -68,6 +68,15 @@ public class ScoreInputDialogFragment extends DialogFragment
         /* Get today's date */
         mCalendar = Calendar.getInstance();
 
+        /* Clear all but the year, month, and day */
+        int year = mCalendar.get(Calendar.YEAR);
+        int month = mCalendar.get(Calendar.MONTH);
+        int day = mCalendar.get(Calendar.DAY_OF_MONTH);
+        mCalendar.setTimeInMillis(0);
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, day);
+
         /* Set up the button to modify the date, and set the button text as the date */
         mDateButton = (AppCompatButton) customView.findViewById(R.id.date_button);
         setDateButtonText();
@@ -116,9 +125,7 @@ public class ScoreInputDialogFragment extends DialogFragment
                         DatabaseScoreEntry newEntry = new DatabaseScoreEntry(
                                 null,
                                 mTimePicker.getTime(),
-                                mCalendar.get(Calendar.DAY_OF_MONTH),
-                                mCalendar.get(Calendar.MONTH),
-                                mCalendar.get(Calendar.YEAR),
+                                mCalendar.getTimeInMillis() / 1000,
                                 sizeValues[mPuzzleSizeSpinner.getSelectedItemPosition()]);
 
                         /* Have the activity submit the data */

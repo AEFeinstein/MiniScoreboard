@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         /* Submit the data. Only allow one score per day per user */
         database.child("scores")
                 .child(mCurrentUser.getUid())
-                .child(String.format("%04d-%02d-%02d", newEntry.mYear, newEntry.mMonth, newEntry.mDay))
+                .child(String.format("%010d", newEntry.mDate))
                 .setValue(newEntry);
 
         /* Give a little user feedback */
