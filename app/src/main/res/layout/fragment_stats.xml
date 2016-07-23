@@ -28,9 +28,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="@string/stats_fragment_title"
         android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true" />
+        android:textStyle="bold" />
 
 </RelativeLayout>
