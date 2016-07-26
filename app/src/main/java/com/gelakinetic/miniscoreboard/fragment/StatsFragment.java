@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -34,6 +35,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 public class StatsFragment extends MiniScoreboardFragment {
 
@@ -72,6 +76,11 @@ public class StatsFragment extends MiniScoreboardFragment {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.statistics_recycler);
         recycler.setHasFixedSize(false);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler.setItemAnimator(new jp.wasabeef.recyclerview.animators.SlideInRightAnimator(new DecelerateInterpolator()));
+        recycler.getItemAnimator().setAddDuration(750);
+        recycler.getItemAnimator().setRemoveDuration(750);
+        recycler.getItemAnimator().setMoveDuration(750);
+        recycler.getItemAnimator().setChangeDuration(750);
 
         /* Attach the firebase database to the recycler view */
         FirebaseRecyclerAdapter<DatabaseScoreEntry, ScoreEntryHolder> mAdapter =
@@ -82,7 +91,10 @@ public class StatsFragment extends MiniScoreboardFragment {
                         chatMessageViewHolder.setPuzzleTimeText(score.getTime());
                     }
                 };
-        recycler.setAdapter(mAdapter);
+        AnimationAdapter animationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
+        animationAdapter.setInterpolator(new DecelerateInterpolator());
+        animationAdapter.setDuration(750);
+        recycler.setAdapter(animationAdapter);
 
         return view;
     }

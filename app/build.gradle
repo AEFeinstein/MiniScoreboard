@@ -53,6 +53,7 @@ dependencies {
     compile 'com.firebaseui:firebase-ui:0.4.1'
 
     compile 'com.code-troopers.betterpickers:library:3.0.0'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
