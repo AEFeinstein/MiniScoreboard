@@ -42,6 +42,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="score_input_title">Submit Your Score</string>
     <string name="score_submitted">Score Submitted!</string>
 
+    <string name="user_created">User Created!</string>
+    <string name="username_input_title">Pick a Username</string>
+
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>
 

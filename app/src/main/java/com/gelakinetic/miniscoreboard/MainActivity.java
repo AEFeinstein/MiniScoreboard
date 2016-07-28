@@ -43,10 +43,17 @@ import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.gelakinetic.miniscoreboard.fragment.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
+import com.gelakinetic.miniscoreboard.fragment.UserNameInputDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private View mRootView;
     private FloatingActionButton mFab;
     private ViewPagerAdapter mViewPagerAdapter;
+    private ViewPager mViewPager;
 
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
@@ -78,6 +86,38 @@ public class MainActivity extends AppCompatActivity {
                     MiniScoreboardAlarm.cancelAlarm(MainActivity.this);
                 }
             }
+        }
+    };
+
+    /* A hash map of user names, because there is no join */
+    private HashMap<String, String> mUsernameHashMap = new HashMap<>();
+    private DatabaseReference mUsernameDatabaseReference;
+    private ChildEventListener mUsernameEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            /* This is called multiple times on init */
+            mUsernameHashMap.put(dataSnapshot.getKey(), dataSnapshot.getValue(String.class));
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            onChildRemoved(dataSnapshot);
+            onChildAdded(dataSnapshot, s);
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            mUsernameHashMap.remove(dataSnapshot.getKey());
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            /* The app doesn't care about username order */
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            /* TODO show some sort of message? */
         }
     };
 
@@ -103,9 +143,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        /* Make sure the user is authenticated */
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mCurrentUser == null) {
+            startActivity(AuthUiActivity.createIntent(this));
+            finish();
+        }
+
+        mUsernameDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        /* Load the initial username hashmap */
+        mUsernameDatabaseReference.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            mUsernameHashMap.put(snapshot.getKey(), snapshot.getValue(String.class));
+                        }
+
+                        /* Check if a username exists for this user */
+                        if (null == mUsernameHashMap.get(mCurrentUser.getUid())) {
+                            /* If it doesn't, prompt them for a username */
+                            UserNameInputDialogFragment newFragment = new UserNameInputDialogFragment();
+                            newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+                        }
+
+                        /* Now that the usernames are loaded, add the listener for any changes */
+                        mUsernameDatabaseReference.addChildEventListener(mUsernameEventListener);
+
+                        /* And set up the view pager */
+                        setupViewPager(mViewPager);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // TODO show an error, quit?
+                    }
+                });
+        
         /* Set up the root view */
+        setContentView(R.layout.activity_main);
         mRootView = findViewById(android.R.id.content);
 
         /* Set up the Toolbar */
@@ -125,30 +202,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* Set up the ViewPager */
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+        /* Set up the ViewPager, don't load fragments until the username hashmap is received */
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        /* With three fragments, all will stay loaded */
+        mViewPager.setOffscreenPageLimit(2);
 
         /* Set up the TabLayout */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(mViewPager);
 
         /* Set up shared preferences */
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
-
-        /* Make sure the user is authenticated */
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mCurrentUser == null) {
-            startActivity(AuthUiActivity.createIntent(this));
-            finish();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mSharedPreferences.unregisterOnSharedPreferenceChangeListener(mListener);
+        mUsernameDatabaseReference.removeEventListener(mUsernameEventListener);
     }
 
     /**
@@ -269,22 +341,67 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Submit a user's score to the firebase database
      *
-     * @param newEntry The DatabaseScoreEntry to submit
+     * @param date
+     * @param puzzleTime
+     * @param puzzleSize
      */
-    public void submitNewScore(DatabaseScoreEntry newEntry) {
-        /* Fill in the user's name */
-        newEntry.mName = mCurrentUser.getDisplayName();
+    public void submitNewScore(long date, int puzzleTime, int puzzleSize) {
 
         /* Get a database reference */
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-        /* Submit the data. Only allow one score per day per user */
-        database.child("scores")
-                .child(mCurrentUser.getUid())
-                .child(String.format("%010d", newEntry.mDate))
-                .setValue(newEntry);
+        /* Make the entry object */
+        DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize);
 
-        /* Give a little user feedback */
-        showSnackbar(R.string.score_submitted);
+        /* Submit the data, first to daily scores then to personal scores. */
+        database.child("dailyScores")
+                .child(Long.toString(date))
+                .child(mCurrentUser.getUid())
+                .setValue(score);
+
+        database.child("personalScores")
+                .child(mCurrentUser.getUid())
+                .child(Long.toString(date))
+                .setValue(score);
+
+//        All this is for generating test data
+//        long baseDate = date;
+//        Random rand = new Random();
+//
+//        for (int i = 0; i < 4; i++) {
+//            for (int j = 0; j < 10; j++) {
+//
+//                puzzleTime = rand.nextInt(600);
+//                DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize, mCurrentUser.getUid() + "-" + i);
+//
+//                /* Submit the data. Only allow one score per day per user */
+//                database.child("dailyScores")
+//                        .child(Long.toString(baseDate + (j * 86400)))
+//                        .child(mCurrentUser.getUid() + "-" + i)
+//                        .setValue(score);
+//
+//                database.child("personalScores")
+//                        .child(mCurrentUser.getUid() + "-" + i)
+//                        .child(Long.toString(baseDate + (j * 86400)))
+//                        .setValue(score);
+//
+//                database.child("users")
+//                        .child(mCurrentUser.getUid() + "-" + i)
+//                        .setValue("Username-" + i);
+//
+//                /* Give a little user feedback */
+//                showSnackbar(R.string.score_submitted);
+//            }
+//        }
+    }
+
+    /**
+     * TODO
+     *
+     * @param key
+     * @return
+     */
+    public String getUserNameFromUid(String key) {
+        return mUsernameHashMap.get(key);
     }
 }

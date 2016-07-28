@@ -26,20 +26,125 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class StatsFragment extends MiniScoreboardFragment {
+
+    private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private Query mStatsScoresDatabaseReference;
+    private ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
+        /**
+         * TODO
+         * @param dataSnapshot
+         * @param s
+         */
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            /* Get the object from the database */
+            DatabaseScoreEntry entry = dataSnapshot.getValue(DatabaseScoreEntry.class);
+            entry.mDate = Long.parseLong(dataSnapshot.getKey());
+
+            /* Insert, sorted, into the array, notify the adapter */
+            int index = Collections.binarySearch(mStatisticsEntries, entry, new DatabaseScoreEntry().new DateComparator());
+            /* binarySearch returns the non-negative index of the element, or a negative index
+             * which is the -index - 1 where the element would be inserted.
+             */
+            if(index < 0) {
+                index = -1 * (index + 1);
+            }
+            mStatisticsEntries.add(index, entry);
+            mRecyclerView.getAdapter().notifyItemInserted(index);
+        }
+
+        /**
+         * TODO
+         * @param dataSnapshot
+         * @param s
+         */
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            /* Get the object from the database */
+            DatabaseScoreEntry entry = dataSnapshot.getValue(DatabaseScoreEntry.class);
+            entry.mDate = Long.parseLong(dataSnapshot.getKey());
+
+            /* Find where it is in the daily entries array */
+            int oldIndex = mStatisticsEntries.indexOf(entry);
+            /* See where it would go */
+            int newIndex = Collections.binarySearch(mStatisticsEntries, entry, new DatabaseScoreEntry().new DateComparator());
+            /* binarySearch returns the non-negative index of the element, or a negative index
+             * which is the -index - 1 where the element would be inserted.
+             */
+            if(newIndex < 0) {
+                newIndex = -1 * (newIndex + 1);
+            }
+
+            if (oldIndex != -1) {
+                if (oldIndex == newIndex) {
+                    /* The entry didn't move, it just changed */
+                    mRecyclerView.getAdapter().notifyItemChanged(oldIndex);
+                }
+                else {
+                    /* The entry moved, remove it first from the old index*/
+                    mStatisticsEntries.remove(oldIndex);
+                    mRecyclerView.getAdapter().notifyItemRemoved(oldIndex);
+                    /* Then add it in it's new position */
+                    mStatisticsEntries.add(newIndex, entry);
+                    mRecyclerView.getAdapter().notifyItemInserted(newIndex);
+                }
+            }
+        }
+
+        /**
+         * TODO
+         * @param dataSnapshot
+         * @param s
+         */
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            /* Always follows onChildChanged which caused the shuffle. On onChildChanged handles it all */
+        }
+
+        /**
+         * TODO
+         * @param dataSnapshot
+         */
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            /* Get the object from the database */
+            DatabaseScoreEntry entry = dataSnapshot.getValue(DatabaseScoreEntry.class);
+            entry.mDate = Long.parseLong(dataSnapshot.getKey());
+
+            /* Find where it is in the daily entries array */
+            int index = mStatisticsEntries.indexOf(entry);
+            if (index != -1) {
+                /* If it exist, remove it and notify the adapter */
+                mStatisticsEntries.remove(index);
+                mRecyclerView.getAdapter().notifyItemRemoved(index);
+            }
+        }
+
+        /**
+         * TODO
+         * @param databaseError
+         */
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            /* TODO some error handling */
+        }
+    };
 
     /**
      * Required empty public constructor
@@ -63,40 +168,57 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        /* Get the current firebase user */
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        /* Get this user's data, and order it by date */
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference reference = database.child("scores")
-                .child(firebaseUser.getUid())
-                .orderByChild("mDate").getRef();
-
         /* Set up the Recycler View */
-        RecyclerView recycler = (RecyclerView) view.findViewById(R.id.statistics_recycler);
-        recycler.setHasFixedSize(false);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemAnimator(new jp.wasabeef.recyclerview.animators.SlideInRightAnimator(new DecelerateInterpolator()));
-        recycler.getItemAnimator().setAddDuration(750);
-        recycler.getItemAnimator().setRemoveDuration(750);
-        recycler.getItemAnimator().setMoveDuration(750);
-        recycler.getItemAnimator().setChangeDuration(750);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.statistics_recycler);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setItemAnimator(new jp.wasabeef.recyclerview.animators.SlideInRightAnimator(new DecelerateInterpolator()));
+        mRecyclerView.getItemAnimator().setAddDuration(750);
+        mRecyclerView.getItemAnimator().setRemoveDuration(750);
+        mRecyclerView.getItemAnimator().setMoveDuration(750);
+        mRecyclerView.getItemAnimator().setChangeDuration(750);
+        mRecyclerView.setAdapter(new RecyclerView.Adapter<ScoreEntryHolder>() {
+            @Override
+            public ScoreEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View itemMessage = getActivity().getLayoutInflater().inflate(R.layout.statistics_card, parent, false);
+                return new ScoreEntryHolder(itemMessage);
+            }
 
-        /* Attach the firebase database to the recycler view */
-        FirebaseRecyclerAdapter<DatabaseScoreEntry, ScoreEntryHolder> mAdapter =
-                new FirebaseRecyclerAdapter<DatabaseScoreEntry, ScoreEntryHolder>(DatabaseScoreEntry.class, R.layout.statistics_card, ScoreEntryHolder.class, reference) {
-                    @Override
-                    public void populateViewHolder(ScoreEntryHolder chatMessageViewHolder, DatabaseScoreEntry score, int position) {
-                        chatMessageViewHolder.setDateText(score.getDate());
-                        chatMessageViewHolder.setPuzzleTimeText(score.getTime());
-                    }
-                };
-        AnimationAdapter animationAdapter = new SlideInBottomAnimationAdapter(mAdapter);
-        animationAdapter.setInterpolator(new DecelerateInterpolator());
-        animationAdapter.setDuration(750);
-        recycler.setAdapter(animationAdapter);
+            @Override
+            public void onBindViewHolder(ScoreEntryHolder holder, int position) {
+                holder.setDateText(mStatisticsEntries.get(position).getDate());
+                holder.setPuzzleTimeText(mStatisticsEntries.get(position).getTime());
+            }
+
+            @Override
+            public int getItemCount() {
+                if (null == mStatisticsEntries) {
+                    return 0;
+                }
+                return mStatisticsEntries.size();
+            }
+        });
+
+        /* Get this daily data, and order it by date */
+        mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference().child("personalScores")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "-0") /* TODO remove "-0" */
+                .orderByKey();
+        mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
+
+        /* TODO show this user's entry separately? */
 
         return view;
+    }
+
+    /**
+     * TODO
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        /* Remove the database listener, and clear the entries */
+        mStatsScoresDatabaseReference.removeEventListener(mStatsScoresChildEventListener);
+        mStatisticsEntries.clear();
     }
 
     /**
@@ -107,39 +229,5 @@ public class StatsFragment extends MiniScoreboardFragment {
     @Override
     public boolean shouldShowFab() {
         return false;
-    }
-
-    public static class ScoreEntryHolder extends RecyclerView.ViewHolder {
-        View mView;
-
-        /**
-         * TODO
-         *
-         * @param itemView
-         */
-        public ScoreEntryHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-        }
-
-        /**
-         * TODO
-         *
-         * @param name
-         */
-        public void setDateText(String name) {
-            TextView field = (TextView) mView.findViewById(R.id.statistics_card_date_text);
-            field.setText(name);
-        }
-
-        /**
-         * TODO
-         *
-         * @param text
-         */
-        public void setPuzzleTimeText(String text) {
-            TextView field = (TextView) mView.findViewById(R.id.statistics_card_puzzle_time_text);
-            field.setText(text);
-        }
     }
 }

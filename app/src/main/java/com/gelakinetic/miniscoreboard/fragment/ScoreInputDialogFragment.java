@@ -31,7 +31,6 @@ import android.view.View;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
-import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 
@@ -119,17 +118,11 @@ public class ScoreInputDialogFragment extends DialogFragment
                         /* Get the array that maps spinner position to puzzle size */
                         int sizeValues[] = getResources().getIntArray(R.array.puzzle_sizes_values);
 
-                        /* Make a database entry with the current data.
-                         * The name will be filled in before inserting into the database
-                         */
-                        DatabaseScoreEntry newEntry = new DatabaseScoreEntry(
-                                null,
-                                mTimePicker.getTime(),
-                                mCalendar.getTimeInMillis() / 1000,
-                                sizeValues[mPuzzleSizeSpinner.getSelectedItemPosition()]);
-
                         /* Have the activity submit the data */
-                        ((MainActivity) getActivity()).submitNewScore(newEntry);
+                        ((MainActivity) getActivity()).submitNewScore(
+                                mCalendar.getTimeInMillis() / 1000,
+                                mTimePicker.getTime(),
+                                sizeValues[mPuzzleSizeSpinner.getSelectedItemPosition()]);
 
                         /* We're done here */
                         dialogInterface.dismiss();
