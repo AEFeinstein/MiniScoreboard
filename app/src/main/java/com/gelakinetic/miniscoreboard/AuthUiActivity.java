@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p/>
+ * <p>
  * This file is part of Mini Scoreboard.
- * <p/>
+ * <p>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ * <p>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,6 +41,12 @@ public class AuthUiActivity extends Activity {
 
     private View mRootView;
 
+    /**
+     * TODO document
+     *
+     * @param context
+     * @return
+     */
     @MainThread
     public static Intent createIntent(Context context) {
         Intent in = new Intent();
@@ -48,6 +54,11 @@ public class AuthUiActivity extends Activity {
         return in;
     }
 
+    /**
+     * TODO document
+     *
+     * @param savedInstanceState
+     */
     @MainThread
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,13 @@ public class AuthUiActivity extends Activity {
         }
     }
 
+    /**
+     * TODO document
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @MainThread
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,6 +107,11 @@ public class AuthUiActivity extends Activity {
         showSnackbar(R.string.unknown_response);
     }
 
+    /**
+     * TODO document
+     *
+     * @param resultCode
+     */
     @MainThread
     private void handleSignInResponse(int resultCode) {
         if (resultCode == RESULT_OK) {
@@ -106,12 +129,22 @@ public class AuthUiActivity extends Activity {
         showSnackbar(R.string.unknown_sign_in_response);
     }
 
+    /**
+     * TODO document
+     *
+     * @return
+     */
     @MainThread
     private boolean isGoogleConfigured() {
         return !UNCHANGED_CONFIG_VALUE.equals(
                 getResources().getString(R.string.default_web_client_id));
     }
 
+    /**
+     * TODO
+     *
+     * @param errorMessageRes
+     */
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
         Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();

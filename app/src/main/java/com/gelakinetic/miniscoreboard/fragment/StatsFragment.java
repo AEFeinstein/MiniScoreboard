@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p/>
+ * <p>
  * This file is part of Mini Scoreboard.
- * <p/>
+ * <p>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ * <p>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,7 +47,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     private Query mStatsScoresDatabaseReference;
     private ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
         /**
-         * TODO
+         * TODO document
          * @param dataSnapshot
          * @param s
          */
@@ -62,7 +62,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
-            if(index < 0) {
+            if (index < 0) {
                 index = -1 * (index + 1);
             }
             mStatisticsEntries.add(index, entry);
@@ -70,7 +70,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO
+         * TODO document
          * @param dataSnapshot
          * @param s
          */
@@ -87,7 +87,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
-            if(newIndex < 0) {
+            if (newIndex < 0) {
                 newIndex = -1 * (newIndex + 1);
             }
 
@@ -95,8 +95,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 if (oldIndex == newIndex) {
                     /* The entry didn't move, it just changed */
                     mRecyclerView.getAdapter().notifyItemChanged(oldIndex);
-                }
-                else {
+                } else {
                     /* The entry moved, remove it first from the old index*/
                     mStatisticsEntries.remove(oldIndex);
                     mRecyclerView.getAdapter().notifyItemRemoved(oldIndex);
@@ -108,7 +107,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO
+         * TODO document
          * @param dataSnapshot
          * @param s
          */
@@ -118,7 +117,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO
+         * TODO document
          * @param dataSnapshot
          */
         @Override
@@ -137,7 +136,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO
+         * TODO document
          * @param databaseError
          */
         @Override
@@ -154,7 +153,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param inflater
      * @param container
@@ -178,18 +177,36 @@ public class StatsFragment extends MiniScoreboardFragment {
         mRecyclerView.getItemAnimator().setMoveDuration(750);
         mRecyclerView.getItemAnimator().setChangeDuration(750);
         mRecyclerView.setAdapter(new RecyclerView.Adapter<ScoreEntryHolder>() {
+            /**
+             * TODO document
+             *
+             * @param parent
+             * @param viewType
+             * @return
+             */
             @Override
             public ScoreEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View itemMessage = getActivity().getLayoutInflater().inflate(R.layout.statistics_card, parent, false);
                 return new ScoreEntryHolder(itemMessage);
             }
 
+            /**
+             * TODO document
+             *
+             * @param holder
+             * @param position
+             */
             @Override
             public void onBindViewHolder(ScoreEntryHolder holder, int position) {
                 holder.setDateText(mStatisticsEntries.get(position).getDate());
                 holder.setPuzzleTimeText(mStatisticsEntries.get(position).getTime());
             }
 
+            /**
+             * TODO document
+             *
+             * @return
+             */
             @Override
             public int getItemCount() {
                 if (null == mStatisticsEntries) {
@@ -211,7 +228,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO
+     * TODO document
      */
     @Override
     public void onDestroyView() {
@@ -222,7 +239,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @return
      */

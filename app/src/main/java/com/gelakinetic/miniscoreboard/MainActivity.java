@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p/>
+ * <p>
  * This file is part of Mini Scoreboard.
- * <p/>
+ * <p>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ * <p>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -76,45 +76,74 @@ public class MainActivity extends AppCompatActivity {
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
-            if (prefKey.equals(getString(R.string.pref_key_daily_notification))) {
-                if (mSharedPreferences.getBoolean(prefKey, false)) {
-                    MiniScoreboardAlarm.setAlarm(MainActivity.this);
-                } else {
-                    MiniScoreboardAlarm.cancelAlarm(MainActivity.this);
+    private SharedPreferences.OnSharedPreferenceChangeListener mListener =
+            new SharedPreferences.OnSharedPreferenceChangeListener() {
+                /**
+                 * TODO document
+                 * @param sharedPreferences
+                 * @param prefKey
+                 */
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
+                    if (prefKey.equals(getString(R.string.pref_key_daily_notification))) {
+                        if (mSharedPreferences.getBoolean(prefKey, false)) {
+                            MiniScoreboardAlarm.setAlarm(MainActivity.this);
+                        } else {
+                            MiniScoreboardAlarm.cancelAlarm(MainActivity.this);
+                        }
+                    }
                 }
-            }
-        }
-    };
+            };
 
     /* A hash map of user names, because there is no join */
     private HashMap<String, String> mUsernameHashMap = new HashMap<>();
     private DatabaseReference mUsernameDatabaseReference;
     private ChildEventListener mUsernameEventListener = new ChildEventListener() {
+        /**
+         * TODO document
+         * @param dataSnapshot
+         * @param s
+         */
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             /* This is called multiple times on init */
             mUsernameHashMap.put(dataSnapshot.getKey(), dataSnapshot.getValue(String.class));
         }
 
+        /**
+         * TODO document
+         * @param dataSnapshot
+         * @param s
+         */
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             onChildRemoved(dataSnapshot);
             onChildAdded(dataSnapshot, s);
         }
 
+        /**
+         * TODO document
+         * @param dataSnapshot
+         */
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             mUsernameHashMap.remove(dataSnapshot.getKey());
         }
 
+        /**
+         * TODO document
+         * @param dataSnapshot
+         * @param s
+         */
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             /* The app doesn't care about username order */
         }
 
+        /**
+         * TODO document
+         * @param databaseError
+         */
         @Override
         public void onCancelled(DatabaseError databaseError) {
             /* TODO show some sort of message? */
@@ -122,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     /**
-     * TODO
+     * TODO document
      *
      * @param context
      * @return
@@ -135,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param savedInstanceState
      */
@@ -155,6 +184,11 @@ public class MainActivity extends AppCompatActivity {
         /* Load the initial username hashmap */
         mUsernameDatabaseReference.addListenerForSingleValueEvent(
                 new ValueEventListener() {
+                    /**
+                     * TODO document
+                     *
+                     * @param dataSnapshot
+                     */
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -175,6 +209,11 @@ public class MainActivity extends AppCompatActivity {
                         setupViewPager(mViewPager);
                     }
 
+                    /**
+                     * TODO document
+                     *
+                     * @param databaseError
+                     */
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         // TODO show an error, quit?
@@ -216,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
     }
 
+    /**
+     * TODO document
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -224,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param menu
      * @return
@@ -238,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param item
      * @return
@@ -258,6 +300,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * TODO document
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -285,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param viewPager
      */
@@ -297,16 +346,33 @@ public class MainActivity extends AppCompatActivity {
         mViewPagerAdapter.addFragment(this, new StatsFragment(), R.string.stats_fragment_title);
         viewPager.setAdapter(mViewPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            /**
+             * TODO document
+             *
+             * @param position
+             * @param positionOffset
+             * @param positionOffsetPixels
+             */
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
+            /**
+             * TODO document
+             *
+             * @param position
+             */
             @Override
             public void onPageSelected(int position) {
                 MainActivity.this.onPageSelected(position);
             }
 
+            /**
+             * TODO document
+             *
+             * @param state
+             */
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -316,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param i
      */
@@ -329,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param errorMessageRes
      */
@@ -396,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
+     * TODO document
      *
      * @param key
      * @return
