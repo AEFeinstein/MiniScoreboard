@@ -489,14 +489,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
-     * @param shouldShow
+     * Show or hide an indeterminate progress bar (spinny circle)
+     *
+     * @param shouldShow true to show the progress bar, false to hide it
      */
     public void showIndeterminateProgressBar(boolean shouldShow) {
-        if(shouldShow) {
+        if (shouldShow) {
             mProgressBar.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             mProgressBar.setVisibility(View.GONE);
         }
     }
