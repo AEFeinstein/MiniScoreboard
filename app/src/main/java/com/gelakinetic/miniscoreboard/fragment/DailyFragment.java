@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
@@ -37,9 +38,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Locale;
 
 public class DailyFragment extends MiniScoreboardFragment {
 
@@ -172,7 +175,7 @@ public class DailyFragment extends MiniScoreboardFragment {
                              Bundle savedInstanceState) {
 
         /* Inflate the layout for this fragment */
-        View view = inflater.inflate(R.layout.fragment_stats, container, false);
+        View view = inflater.inflate(R.layout.fragment_daily, container, false);
 
         /* Figure out what day it is */
         final Calendar calendar = Calendar.getInstance();
@@ -237,6 +240,11 @@ public class DailyFragment extends MiniScoreboardFragment {
                 .orderByChild("mPuzzleTime")
                 .limitToFirst(20);
         mDailyScoreDatabaseReference.addChildEventListener(mDailyScoreChildEventListener);
+
+        /* Write the date at the top */
+        String date = DateFormat
+                .getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(calendar.getTime());
+        ((TextView)view.findViewById(R.id.date_text_view)).setText(date);
 
         /* TODO show this user's entry separately? */
 

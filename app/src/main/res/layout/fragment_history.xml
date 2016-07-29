@@ -29,7 +29,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/history_fragment_title"
+        android:text="@string/coming_soon"
         android:textSize="40sp"
         android:textStyle="bold" />
 

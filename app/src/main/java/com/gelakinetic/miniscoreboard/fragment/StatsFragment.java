@@ -26,8 +26,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
+import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
 import com.google.firebase.auth.FirebaseAuth;
@@ -222,14 +224,20 @@ public class StatsFragment extends MiniScoreboardFragment {
             }
         });
 
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         /* Get this daily data, and order it by date */
         mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("personalScores")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "-0") /* TODO remove "-0" */
+                .child(uid)
                 .orderByKey();
         mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
 
-        /* TODO show this user's entry separately? */
+        /* Write the date at the top */
+        String username = ((MainActivity)getActivity()).getUserNameFromUid(uid);
+        ((TextView)view.findViewById(R.id.user_name_text_view)).setText(username);
+
+        /* TODO show other statistics */
 
         return view;
     }

@@ -24,10 +24,22 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/statistics_recycler"
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/statistics_card" />
+        android:orientation="vertical">
 
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/user_name_text_view"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="8dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/statistics_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/statistics_card" />
+    </android.support.v7.widget.LinearLayoutCompat>
 </ScrollView>
