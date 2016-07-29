@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -61,34 +61,32 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
     }
 
     /**
-     * TODO document
-     *
-     * @return
+     * @return The date of this entry, in String form
      */
     @Exclude
     public String getDate() {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(mDate * 1000);
-        return DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(cal.getTime());
+        return DateFormat
+                .getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(cal.getTime());
     }
 
     /**
-     * TODO document
-     *
-     * @return
+     * @return The puzzle time of this entry, in String form
      */
     @Exclude
-    public String getTime() {
+    public String getPuzzleTime() {
         int minutes = mPuzzleTime / 60;
         int seconds = mPuzzleTime % 60;
         return String.format("%d:%02d", minutes, seconds);
     }
 
     /**
-     * TODO document
+     * Compare this DatabaseScoreEntry to another DatabaseScoreEntry, based on the puzzle time
      *
-     * @param databaseScoreEntry
-     * @return
+     * @param databaseScoreEntry The other DatabaseScoreEntry to compare to
+     * @return 0 if they are equal, 1 if this puzzle took longer to solve, -1 if this puzzle took
+     * less time to solve
      */
     @Override
     public int compareTo(@NonNull DatabaseScoreEntry databaseScoreEntry) {
@@ -101,59 +99,50 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
     }
 
     /**
-     * TODO document
+     * Check if this DatabaseScoreEntry is equal to another. They are considered equal if the date
+     * and uid are the same
      *
-     * @param obj
-     * @return
+     * @param obj Another DatabaseScoreEntry
+     * @return true if the date and uid match, false if they don't or obj isn't a DatabaseScoreEntry
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof DatabaseScoreEntry)) {
-            return false;
-        }
-        return (mDate == ((DatabaseScoreEntry) obj).mDate) && mUid.equals(((DatabaseScoreEntry) obj).mUid);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param entry
-     */
-    public void setValuesFrom(DatabaseScoreEntry entry) {
-        this.mPuzzleTime = entry.mPuzzleTime;
-        this.mPuzzleSize = entry.mPuzzleSize;
-        this.mUid = entry.mUid;
-        this.mDate = entry.mDate;
-        this.mUsername = entry.mUsername;
+        return (obj instanceof DatabaseScoreEntry)
+                && (mDate == ((DatabaseScoreEntry) obj).mDate)
+                && mUid.equals(((DatabaseScoreEntry) obj).mUid);
     }
 
     public class TimeComparator implements Comparator<DatabaseScoreEntry> {
 
         /**
-         * TODO document
+         * Compare two DatabaseScoreEntrys based on puzzle time
          *
-         * @param databaseScoreEntry
-         * @param t1
-         * @return
+         * @param scoreEntry1 One DatabaseScoreEntry to compare
+         * @param scoreEntry2 Another DatabaseScoreEntry to compare
+         * @return a negative value if scoreEntry1 is faster than scoreEntry2.
+         * 0 if the two entries are equal.
+         * a positive value if scoreEntry1 is slower than scoreEntry2.
          */
         @Override
-        public int compare(DatabaseScoreEntry databaseScoreEntry, DatabaseScoreEntry t1) {
-            return (Integer.valueOf(databaseScoreEntry.mPuzzleTime)).compareTo(t1.mPuzzleTime);
+        public int compare(DatabaseScoreEntry scoreEntry1, DatabaseScoreEntry scoreEntry2) {
+            return (Integer.valueOf(scoreEntry1.mPuzzleTime)).compareTo(scoreEntry2.mPuzzleTime);
         }
     }
 
     public class DateComparator implements Comparator<DatabaseScoreEntry> {
 
         /**
-         * TODO document
+         * Compare two DatabaseScoreEntrys based on date
          *
-         * @param databaseScoreEntry
-         * @param t1
-         * @return
+         * @param scoreEntry1 One DatabaseScoreEntry to compare
+         * @param scoreEntry2 Another DatabaseScoreEntry to compare
+         * @return a negative value if scoreEntry1 came before scoreEntry2.
+         * 0 if the two entries are on the same day.
+         * a positive value if scoreEntry1 is after scoreEntry2.
          */
         @Override
-        public int compare(DatabaseScoreEntry databaseScoreEntry, DatabaseScoreEntry t1) {
-            return (Long.valueOf(databaseScoreEntry.mDate)).compareTo(t1.mDate);
+        public int compare(DatabaseScoreEntry scoreEntry1, DatabaseScoreEntry scoreEntry2) {
+            return (Long.valueOf(scoreEntry1.mDate)).compareTo(scoreEntry2.mDate);
         }
     }
 }

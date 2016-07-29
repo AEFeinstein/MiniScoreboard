@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,10 +40,10 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 50377;
 
     /**
-     * TODO document
+     * Build and return a PendingIntent for the Alarm to call
      *
-     * @param context
-     * @return
+     * @param context The Context to build the intent with
+     * @return A PendingIntent to either set or clear
      */
     public static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, MiniScoreboardAlarm.class);
@@ -51,9 +51,9 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
     }
 
     /**
-     * TODO document
+     * Set the daily alarm. This is called when the preference is toggled and on boot
      *
-     * @param context
+     * @param context A Context to set the alarm with
      */
     public static void setAlarm(Context context) {
 
@@ -82,9 +82,10 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
     }
 
     /**
-     * TODO document
+     * Cancel the daily Alarm. This is called when the preference is toggled or before resetting
+     * the alarm
      *
-     * @param context
+     * @param context a Context to cancel the alarm with
      */
     public static void cancelAlarm(Context context) {
         /* Cancel the alarm by canceling an equivalent pending intent */
@@ -93,10 +94,10 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
     }
 
     /**
-     * TODO document
+     * This is called when the Alarm happens. Post a notification to play the puzzle
      *
-     * @param context
-     * @param intent
+     * @param context A Context to build the notification with
+     * @param intent  Unused
      */
     @Override
     public void onReceive(Context context, Intent intent) {

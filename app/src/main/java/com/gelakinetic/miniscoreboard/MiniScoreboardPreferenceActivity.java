@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,9 +31,9 @@ public class MiniScoreboardPreferenceActivity extends AppCompatActivity {
     private View mRootView;
 
     /**
-     * TODO document
+     * Set up the UI. activity_mini_scoreboard_preference hardcodes the preference fragment
      *
-     * @param savedInstanceState
+     * @param savedInstanceState Passed to super.onCreate()
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,11 +50,11 @@ public class MiniScoreboardPreferenceActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Show a little message on the Snackbar
      *
-     * @param errorMessageRes
+     * @param message A resource ID for a message to display
      */
-    public void showSnackbar(int errorMessageRes) {
-        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+    public void showSnackbar(int message) {
+        Snackbar.make(mRootView, message, Snackbar.LENGTH_LONG).show();
     }
 }

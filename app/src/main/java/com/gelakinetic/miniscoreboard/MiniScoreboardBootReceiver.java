@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,10 +27,11 @@ import android.support.v7.preference.PreferenceManager;
 public class MiniScoreboardBootReceiver extends BroadcastReceiver {
 
     /**
-     * TODO document
+     * Called when the device boots, this allows the app to set the daily alarm
      *
-     * @param context
-     * @param intent
+     * @param context A Context to get preferences and set the alarm with
+     * @param intent The intent that called this receiver,
+     *               should be android.intent.action.BOOT_COMPLETED
      */
     @Override
     public void onReceive(Context context, Intent intent) {

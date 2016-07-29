@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,6 +39,13 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
     public static final int RES_CODE_ACCT_DELETED = 841291;
     public static final int RES_CODE_SIGNED_OUT = 218652;
 
+    /**
+     * Create the preferences from XML, then attach some listeners to the preferences which are
+     * actually buttons
+     *
+     * @param bundle Unused
+     * @param s      Unused
+     */
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
@@ -56,7 +63,8 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
                                             getActivity().setResult(RES_CODE_SIGNED_OUT);
                                             getActivity().finish();
                                         } else {
-                                            ((MiniScoreboardPreferenceActivity) getActivity()).showSnackbar(R.string.sign_out_failed);
+                                            ((MiniScoreboardPreferenceActivity) getActivity())
+                                                    .showSnackbar(R.string.sign_out_failed);
                                         }
                                     }
                                 });
@@ -87,7 +95,7 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
 
 
     /**
-     * TODO document
+     * Delete this user's account
      */
     @MainThread
     private void deleteAccount() {
@@ -102,7 +110,8 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
                         getActivity().setResult(RES_CODE_ACCT_DELETED);
                         getActivity().finish();
                     } else {
-                        ((MiniScoreboardPreferenceActivity) getActivity()).showSnackbar(R.string.delete_account_failed);
+                        ((MiniScoreboardPreferenceActivity) getActivity())
+                                .showSnackbar(R.string.delete_account_failed);
                     }
                 }
             });

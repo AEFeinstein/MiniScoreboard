@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,9 +48,9 @@ public class DailyFragment extends MiniScoreboardFragment {
     private Query mDailyScoreDatabaseReference;
     private ChildEventListener mDailyScoreChildEventListener = new ChildEventListener() {
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is added to the database. The key for this value is the user's uid
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -60,7 +60,8 @@ public class DailyFragment extends MiniScoreboardFragment {
             entry.mUsername = ((MainActivity) getActivity()).getUserNameFromUid(dataSnapshot.getKey());
 
             /* Insert, sorted, into the array, notify the adapter */
-            int index = Collections.binarySearch(mDailyEntries, entry, new DatabaseScoreEntry().new TimeComparator());
+            int index = Collections.binarySearch(mDailyEntries, entry,
+                    new DatabaseScoreEntry().new TimeComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -72,9 +73,9 @@ public class DailyFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is changed in the database. The key for this value is the user's uid
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -110,9 +111,9 @@ public class DailyFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is moved in the database. This is handled by onChildChanged
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -120,8 +121,8 @@ public class DailyFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
+         * Called when a child is removed from the database. The key for this value is the user's uid
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
          */
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -140,8 +141,9 @@ public class DailyFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param databaseError
+         * Called when the database operation is cancelled
+         *
+         * @param databaseError The database error that cancelled the operation
          */
         @Override
         public void onCancelled(DatabaseError databaseError) {
@@ -157,12 +159,13 @@ public class DailyFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
+     * Create a view which will display the daily scores
+     * Attach to the Firebase database too
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater           A LayoutInflater to inflate the view with
+     * @param container          A ViewGroup to add this view to
+     * @param savedInstanceState Unused
+     * @return The View for this Fragment
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -191,18 +194,34 @@ public class DailyFragment extends MiniScoreboardFragment {
         mRecyclerView.getItemAnimator().setMoveDuration(750);
         mRecyclerView.getItemAnimator().setChangeDuration(750);
         mRecyclerView.setAdapter(new RecyclerView.Adapter<ScoreEntryHolder>() {
+            /**
+             * Called when each individual view is created in the RecyclerView
+             *
+             * @param parent The ViewGroup to add this ScoreEntryHolder to
+             * @param viewType Unused
+             * @return A ScoreEntryHolder to be displayed in the RecyclerView
+             */
             @Override
             public ScoreEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View itemMessage = getActivity().getLayoutInflater().inflate(R.layout.statistics_card, parent, false);
                 return new ScoreEntryHolder(itemMessage);
             }
 
+            /**
+             * Called when data is bound to each individual view in the RecyclerView
+             *
+             * @param holder The ScoreEntryHolder to bind the data to
+             * @param position The position in the list to get data from
+             */
             @Override
             public void onBindViewHolder(ScoreEntryHolder holder, int position) {
-                holder.setDateText(mDailyEntries.get(position).mUsername);
-                holder.setPuzzleTimeText(mDailyEntries.get(position).getTime());
+                holder.setTitleText(mDailyEntries.get(position).mUsername);
+                holder.setPuzzleTimeText(mDailyEntries.get(position).getPuzzleTime());
             }
 
+            /**
+             * @return The total number of items to be displayed in this RecyclerView
+             */
             @Override
             public int getItemCount() {
                 if (null == mDailyEntries) {
@@ -225,7 +244,7 @@ public class DailyFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
+     * Called when the View is destroyed. Detach the database and clear out any local entries
      */
     @Override
     public void onDestroyView() {
@@ -236,9 +255,7 @@ public class DailyFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
-     *
-     * @return
+     * @return true, since this fragment should show the floating action button
      */
     @Override
     public boolean shouldShowFab() {

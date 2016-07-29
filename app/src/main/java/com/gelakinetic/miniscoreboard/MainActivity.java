@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener mListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 /**
-                 * TODO document
-                 * @param sharedPreferences
-                 * @param prefKey
+                 * Called when a preference changes
+                 * @param sharedPreferences A reference to the sharedPreferences
+                 * @param prefKey The key for the preference which changed
                  */
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mUsernameDatabaseReference;
     private ChildEventListener mUsernameEventListener = new ChildEventListener() {
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is added to the database. The key for this value is the uid
+         * @param dataSnapshot The child added, a String
+         * @param s Unused
          */
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is changed in the database. The key for this value is the uid
+         * @param dataSnapshot The child added, a String
+         * @param s Unused
          */
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
+         * Called when a child is removed from the database. The key for this value is the uid
+         * @param dataSnapshot The child added, a String
          */
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is moved in the database. The data isn't ordered, so it doesn't matter
+         * @param dataSnapshot The child added, a String
+         * @param s Unused
          */
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -141,20 +141,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * TODO document
-         * @param databaseError
+         * Called when the database operation is cancelled
+         *
+         * @param databaseError The database error that cancelled the operation
          */
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            /* TODO show some sort of message? */
+            /* TODO some error handling */
         }
     };
 
     /**
-     * TODO document
+     * Create an Intento to launch a MainActivity
      *
-     * @param context
-     * @return
+     * @param context The Context to make the Intent with
+     * @return An Intent to launch a MainActivity
      */
     @MainThread
     public static Intent createIntent(Context context) {
@@ -164,9 +165,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called when this Activity is created. Connect to the database to get the usernames
+     * and set up the UI
      *
-     * @param savedInstanceState
+     * @param savedInstanceState passed to super.onCreate()
      */
     @MainThread
     @Override
@@ -185,9 +187,10 @@ public class MainActivity extends AppCompatActivity {
         mUsernameDatabaseReference.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     /**
-                     * TODO document
+                     * Called when the requested data from the database is fetched.
+                     * After the initial read, a listener will be set up for changes
                      *
-                     * @param dataSnapshot
+                     * @param dataSnapshot The data from the database, a bunch of usernames with uid keys
                      */
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -210,13 +213,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     /**
-                     * TODO document
+                     * Called when the database operation is cancelled
                      *
-                     * @param databaseError
+                     * @param databaseError The database error that cancelled the operation
                      */
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        // TODO show an error, quit?
+                        /* TODO some error handling */
                     }
                 });
         
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called when this Activity is destroyed. Unregister all listeners
      */
     @Override
     protected void onDestroy() {
@@ -266,10 +269,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called to create the menu in the Toolbar
      *
-     * @param menu
-     * @return
+     * @param menu the menu to inflate into
+     * @return true, because a menu was created
      */
     @MainThread
     @Override
@@ -280,15 +283,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called when an item in the Toolbar menu is tapped
      *
-     * @param item
-     * @return
+     * @param item The item that was tapped
+     * @return true if the tap was handled, false otherwise
      */
     @MainThread
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+        /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.menu_settings:
                 Intent in = new Intent();
@@ -301,11 +304,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called when the MiniScoreboardPreferenceActivity returns
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode REQ_CODE_SETTINGS if the user deleted their account or signed out
+     * @param resultCode  RES_CODE_ACCT_DELETED or RES_CODE_SIGNED_OUT
+     * @param data        Unused, though extra data could be passed here
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -314,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
             case REQ_CODE_SETTINGS: {
                 switch (resultCode) {
                     case MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED: {
+                        /* TODO remove user data from database */
                         startActivity(AuthUiActivity.createIntent(this));
                         finish();
                         break;
@@ -334,9 +338,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Set up the ViewPager with three fragments, Daily Score, Score History, and Statistics
      *
-     * @param viewPager
+     * @param viewPager The viewPager add Fragments too
      */
     @MainThread
     private void setupViewPager(ViewPager viewPager) {
@@ -346,12 +350,16 @@ public class MainActivity extends AppCompatActivity {
         mViewPagerAdapter.addFragment(this, new StatsFragment(), R.string.stats_fragment_title);
         viewPager.setAdapter(mViewPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             /**
-             * TODO document
+             * This method will be invoked when the current page is scrolled, either as part of a
+             * programmatically initiated smooth scroll or a user initiated touch scroll.
              *
-             * @param position
-             * @param positionOffset
-             * @param positionOffsetPixels
+             * @param position Position index of the first page currently being displayed. Page
+             *                 position+1 will be visible if positionOffset is nonzero.
+             * @param positionOffset Value from [0, 1) indicating the offset from the page at
+             *                       position.
+             * @param positionOffsetPixels Value in pixels indicating the offset from position.
              */
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -359,9 +367,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             /**
-             * TODO document
+             * This method will be invoked when a new page becomes selected. Animation is not necessarily complete.
              *
-             * @param position
+             * @param position Position index of the new selected page.
              */
             @Override
             public void onPageSelected(int position) {
@@ -369,9 +377,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             /**
-             * TODO document
+             * Called when the scroll state changes. Useful for discovering when the user begins
+             * dragging, when the pager is automatically settling to the current page, or when it
+             * is fully stopped/idle.
              *
-             * @param state
+             * @param state The new scroll state.
              */
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -382,34 +392,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Called when a Fragment is selected in the ViewPager
      *
-     * @param i
+     * @param position The position of the fragment currently being displayed
      */
-    private void onPageSelected(int i) {
-        if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(i)).shouldShowFab()) {
+    private void onPageSelected(int position) {
+        if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowFab()) {
             mFab.show();
         } else {
             mFab.hide();
         }
     }
 
+
     /**
-     * TODO document
+     * Show a little message on the Snackbar
      *
-     * @param errorMessageRes
+     * @param message A resource ID for a message to display
      */
     @MainThread
-    public void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+    public void showSnackbar(@StringRes int message) {
+        Snackbar.make(mRootView, message, Snackbar.LENGTH_LONG).show();
     }
 
     /**
      * Submit a user's score to the firebase database
      *
-     * @param date
-     * @param puzzleTime
-     * @param puzzleSize
+     * @param date       The date this puzzle was solved
+     * @param puzzleTime The time it took to solve the puzzle
+     * @param puzzleSize The size of the puzzle
      */
     public void submitNewScore(long date, int puzzleTime, int puzzleSize) {
 
@@ -430,42 +441,40 @@ public class MainActivity extends AppCompatActivity {
                 .child(Long.toString(date))
                 .setValue(score);
 
-//        All this is for generating test data
-//        long baseDate = date;
-//        Random rand = new Random();
-//
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 10; j++) {
-//
-//                puzzleTime = rand.nextInt(600);
-//                DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize, mCurrentUser.getUid() + "-" + i);
-//
-//                /* Submit the data. Only allow one score per day per user */
-//                database.child("dailyScores")
-//                        .child(Long.toString(baseDate + (j * 86400)))
-//                        .child(mCurrentUser.getUid() + "-" + i)
-//                        .setValue(score);
-//
-//                database.child("personalScores")
-//                        .child(mCurrentUser.getUid() + "-" + i)
-//                        .child(Long.toString(baseDate + (j * 86400)))
-//                        .setValue(score);
-//
-//                database.child("users")
-//                        .child(mCurrentUser.getUid() + "-" + i)
-//                        .setValue("Username-" + i);
-//
-//                /* Give a little user feedback */
-//                showSnackbar(R.string.score_submitted);
-//            }
-//        }
+        /* All this is for generating test data */
+        /*
+        long baseDate = date;
+        Random rand = new Random();
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 10; j++) {
+
+                puzzleTime = rand.nextInt(600);
+                DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize, mCurrentUser.getUid() + "-" + i);
+
+                database.child("dailyScores")
+                        .child(Long.toString(baseDate + (j * 86400)))
+                        .child(mCurrentUser.getUid() + "-" + i)
+                        .setValue(score);
+
+                database.child("personalScores")
+                        .child(mCurrentUser.getUid() + "-" + i)
+                        .child(Long.toString(baseDate + (j * 86400)))
+                        .setValue(score);
+
+                database.child("users")
+                        .child(mCurrentUser.getUid() + "-" + i)
+                        .setValue("Username-" + i);
+            }
+        }
+        */
     }
 
     /**
-     * TODO document
+     * Return a String username for the given uid
      *
-     * @param key
-     * @return
+     * @param key A user's uid
+     * @return The user's username
      */
     public String getUserNameFromUid(String key) {
         return mUsernameHashMap.get(key);

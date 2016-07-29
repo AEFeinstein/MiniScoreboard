@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,19 +35,19 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
     /**
-     * TODO document
+     * Default constructor
      *
-     * @param manager
+     * @param manager A FragmentManager to manage the fragments in this adapter
      */
     public ViewPagerAdapter(FragmentManager manager) {
         super(manager);
     }
 
     /**
-     * TODO document
+     * Return the fragment at a given position
      *
-     * @param position
-     * @return
+     * @param position The position of the fragment to return
+     * @return A fragment at the given position
      */
     @Override
     public Fragment getItem(int position) {
@@ -55,9 +55,7 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * TODO document
-     *
-     * @return
+     * @return The total number of Fragments managed by this ViewPagerAdapter
      */
     @Override
     public int getCount() {
@@ -65,11 +63,11 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * TODO document
+     * Add a Fragment to this ViewPagerAdapter
      *
-     * @param ctx
-     * @param fragment
-     * @param title
+     * @param ctx      A Context to get resources with
+     * @param fragment The Fragment to add to this ViewPagerAdapter
+     * @param title    A resource ID for the title of this fragment
      */
     public void addFragment(Context ctx, Fragment fragment, int title) {
         mFragmentList.add(fragment);
@@ -77,10 +75,10 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * TODO document
+     * Get the title of a Fragment at the given position
      *
-     * @param position
-     * @return
+     * @param position The position of the Fragment to get its title
+     * @return The title of the fragment
      */
     @Override
     public CharSequence getPageTitle(int position) {
@@ -88,12 +86,12 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * TODO document
+     * Get a Fragment at the given position
      *
-     * @param i
-     * @return
+     * @param position The position of the Fragment to return
+     * @return A Fragment at the given position
      */
-    public Object getFragment(int i) {
-        return mFragmentList.get(i);
+    public Fragment getFragment(int position) {
+        return mFragmentList.get(position);
     }
 }

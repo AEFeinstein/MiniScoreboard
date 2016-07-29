@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -62,18 +62,18 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        createNewUser(mEditText.getText().toString());
+                        createNewUserName(mEditText.getText().toString());
                     }
                 })
                 .show();
     }
 
     /**
-     * TODO document
+     * Create a new username for this user
      *
-     * @param username
+     * @param username A String username for this user
      */
-    public void createNewUser(String username) {
+    public void createNewUserName(String username) {
 
         /* Get a database reference */
         FirebaseDatabase.getInstance().getReference()

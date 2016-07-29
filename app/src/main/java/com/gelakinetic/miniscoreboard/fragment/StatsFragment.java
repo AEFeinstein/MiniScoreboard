@@ -1,18 +1,18 @@
 /**
  * Copyright 2016 Adam Feinstein
- * <p>
+ * <p/>
  * This file is part of Mini Scoreboard.
- * <p>
+ * <p/>
  * Mini Scoreboard is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ * <p/>
  * Mini Scoreboard is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -40,6 +40,8 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+
 public class StatsFragment extends MiniScoreboardFragment {
 
     private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
@@ -47,9 +49,9 @@ public class StatsFragment extends MiniScoreboardFragment {
     private Query mStatsScoresDatabaseReference;
     private ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is added to the database. The key for this value is the date
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -58,7 +60,8 @@ public class StatsFragment extends MiniScoreboardFragment {
             entry.mDate = Long.parseLong(dataSnapshot.getKey());
 
             /* Insert, sorted, into the array, notify the adapter */
-            int index = Collections.binarySearch(mStatisticsEntries, entry, new DatabaseScoreEntry().new DateComparator());
+            int index = Collections.binarySearch(mStatisticsEntries, entry,
+                    new DatabaseScoreEntry().new DateComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -70,9 +73,9 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is changedin the database. The key for this value is the date
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -107,18 +110,20 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
-         * @param s
+         * Called when a child is moved in the database. This is handled by onChildChanged
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
+         * @param s Unused
          */
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            /* Always follows onChildChanged which caused the shuffle. On onChildChanged handles it all */
+            /* Always follows onChildChanged which caused the shuffle.
+             * On onChildChanged handles it all
+             */
         }
 
         /**
-         * TODO document
-         * @param dataSnapshot
+         * Called when a child is removed from the database. The key for this value is the date
+         * @param dataSnapshot The child added, a DatabaseScoreEntry
          */
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -136,8 +141,9 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /**
-         * TODO document
-         * @param databaseError
+         * Called when the database operation is cancelled
+         *
+         * @param databaseError The database error that cancelled the operation
          */
         @Override
         public void onCancelled(DatabaseError databaseError) {
@@ -153,12 +159,13 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
+     * Create a view which will display the statistics for the current user
+     * Attach to the Firebase database too
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater           A LayoutInflater to inflate the view with
+     * @param container          A ViewGroup to add this view to
+     * @param savedInstanceState Unused
+     * @return The View for this Fragment
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,41 +178,40 @@ public class StatsFragment extends MiniScoreboardFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.statistics_recycler);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setItemAnimator(new jp.wasabeef.recyclerview.animators.SlideInRightAnimator(new DecelerateInterpolator()));
+        mRecyclerView.setItemAnimator(new SlideInRightAnimator(new DecelerateInterpolator()));
         mRecyclerView.getItemAnimator().setAddDuration(750);
         mRecyclerView.getItemAnimator().setRemoveDuration(750);
         mRecyclerView.getItemAnimator().setMoveDuration(750);
         mRecyclerView.getItemAnimator().setChangeDuration(750);
         mRecyclerView.setAdapter(new RecyclerView.Adapter<ScoreEntryHolder>() {
             /**
-             * TODO document
+             * Called when each individual view is created in the RecyclerView
              *
-             * @param parent
-             * @param viewType
-             * @return
+             * @param parent The ViewGroup to add this ScoreEntryHolder to
+             * @param viewType Unused
+             * @return A ScoreEntryHolder to be displayed in the RecyclerView
              */
             @Override
             public ScoreEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View itemMessage = getActivity().getLayoutInflater().inflate(R.layout.statistics_card, parent, false);
-                return new ScoreEntryHolder(itemMessage);
+                View statCard = getActivity().getLayoutInflater()
+                        .inflate(R.layout.statistics_card, parent, false);
+                return new ScoreEntryHolder(statCard);
             }
 
             /**
-             * TODO document
+             * Called when data is bound to each individual view in the RecyclerView
              *
-             * @param holder
-             * @param position
+             * @param holder The ScoreEntryHolder to bind the data to
+             * @param position The position in the list to get data from
              */
             @Override
             public void onBindViewHolder(ScoreEntryHolder holder, int position) {
-                holder.setDateText(mStatisticsEntries.get(position).getDate());
-                holder.setPuzzleTimeText(mStatisticsEntries.get(position).getTime());
+                holder.setTitleText(mStatisticsEntries.get(position).getDate());
+                holder.setPuzzleTimeText(mStatisticsEntries.get(position).getPuzzleTime());
             }
 
             /**
-             * TODO document
-             *
-             * @return
+             * @return The total number of items to be displayed in this RecyclerView
              */
             @Override
             public int getItemCount() {
@@ -217,7 +223,8 @@ public class StatsFragment extends MiniScoreboardFragment {
         });
 
         /* Get this daily data, and order it by date */
-        mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference().child("personalScores")
+        mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("personalScores")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "-0") /* TODO remove "-0" */
                 .orderByKey();
         mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
@@ -228,7 +235,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
+     * Called when the View is destroyed. Detach the database and clear out any local entries
      */
     @Override
     public void onDestroyView() {
@@ -239,9 +246,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     }
 
     /**
-     * TODO document
-     *
-     * @return
+     * @return false, since this fragment should not have a floating action button
      */
     @Override
     public boolean shouldShowFab() {
