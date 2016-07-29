@@ -36,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mFab;
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
+    private ProgressBar mProgressBar;
 
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
@@ -210,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
 
                         /* And set up the view pager */
                         setupViewPager(mViewPager);
+
+                        /* Hide the progress bar */
+                        showIndeterminateProgressBar(false);
                     }
 
                     /**
@@ -252,6 +257,9 @@ public class MainActivity extends AppCompatActivity {
         /* Set up the TabLayout */
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        /* Set up the ProgressBar */
+        mProgressBar = (ProgressBar) findViewById(R.id.indeterminate_progress_bar);
 
         /* Set up shared preferences */
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -478,5 +486,18 @@ public class MainActivity extends AppCompatActivity {
      */
     public String getUserNameFromUid(String key) {
         return mUsernameHashMap.get(key);
+    }
+
+    /**
+     * TODO
+     * @param shouldShow
+     */
+    public void showIndeterminateProgressBar(boolean shouldShow) {
+        if(shouldShow) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 }
