@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     /* Tags for fragments */
     public static final String DATE_PICKER_TAG = "DATE_PICKER_TAG";
-    private static final String DIALOG_TAG = "DIALOG_TAG";
+    public static final String DIALOG_TAG = "DIALOG_TAG";
 
     /* The user data */
     private FirebaseUser mCurrentUser;

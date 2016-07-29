@@ -44,6 +44,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="user_created">User Created!</string>
     <string name="username_input_title">Pick a Username</string>
+    <string name="username_changed">Username Changed</string>
 
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>
@@ -61,6 +62,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_daily_notification_vibrate_title">Vibration</string>
 
     <string name="pref_notification_group_title">Notification Settings</string>
+
+    <string name="pref_key_pref_change_username_btn">change_username</string>
+    <string name="pref_change_username_title">Change Your Username</string>
 
     <string name="pref_key_sign_out_btn">sign_out</string>
     <string name="pref_sign_out_title">Sign Out</string>

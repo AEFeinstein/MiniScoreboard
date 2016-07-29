@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.gelakinetic.miniscoreboard.MainActivity;
+import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -82,6 +83,10 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .setValue(username);
 
         /* Give a little user feedback */
-        ((MainActivity) getActivity()).showSnackbar(R.string.user_created);
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showSnackbar(R.string.user_created);
+        } else if (getActivity() instanceof MiniScoreboardPreferenceActivity) {
+            ((MiniScoreboardPreferenceActivity) getActivity()).showSnackbar(R.string.username_changed);
+        }
     }
 }

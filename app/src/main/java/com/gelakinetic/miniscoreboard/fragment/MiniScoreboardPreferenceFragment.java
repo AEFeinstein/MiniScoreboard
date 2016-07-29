@@ -28,6 +28,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.firebase.ui.auth.AuthUI;
+import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +50,17 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
+
+        findPreference(getString(R.string.pref_key_pref_change_username_btn))
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        UserNameInputDialogFragment newFragment = new UserNameInputDialogFragment();
+                        newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
+                                MainActivity.DIALOG_TAG);
+                        return true;
+                    }
+                });
 
         findPreference(getString(R.string.pref_key_sign_out_btn))
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

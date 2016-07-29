@@ -40,6 +40,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <PreferenceCategory android:title="@string/pref_account_group_title">
         <Preference
+            android:key="@string/pref_key_pref_change_username_btn"
+            android:title="@string/pref_change_username_title" />
+        <Preference
             android:key="@string/pref_key_sign_out_btn"
             android:title="@string/pref_sign_out_title" />
         <Preference

@@ -30,8 +30,8 @@ public class MiniScoreboardBootReceiver extends BroadcastReceiver {
      * Called when the device boots, this allows the app to set the daily alarm
      *
      * @param context A Context to get preferences and set the alarm with
-     * @param intent The intent that called this receiver,
-     *               should be android.intent.action.BOOT_COMPLETED
+     * @param intent  The intent that called this receiver,
+     *                should be android.intent.action.BOOT_COMPLETED
      */
     @Override
     public void onReceive(Context context, Intent intent) {
