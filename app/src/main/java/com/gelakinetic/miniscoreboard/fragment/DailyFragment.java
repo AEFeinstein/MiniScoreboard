@@ -246,7 +246,7 @@ public class DailyFragment extends MiniScoreboardFragment {
         /* Write the date at the top */
         String date = DateFormat
                 .getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(calendar.getTime());
-        ((TextView)view.findViewById(R.id.date_text_view)).setText(date);
+        ((TextView) view.findViewById(R.id.date_text_view)).setText(date);
 
         view.findViewById(R.id.play_puzzle_button).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -448,34 +448,6 @@ public class MainActivity extends AppCompatActivity {
                 .child(mCurrentUser.getUid())
                 .child(Long.toString(date))
                 .setValue(score);
-
-        /* All this is for generating test data */
-        /*
-        long baseDate = date;
-        Random rand = new Random();
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 10; j++) {
-
-                puzzleTime = rand.nextInt(600);
-                DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize, mCurrentUser.getUid() + "-" + i);
-
-                database.child("dailyScores")
-                        .child(Long.toString(baseDate + (j * 86400)))
-                        .child(mCurrentUser.getUid() + "-" + i)
-                        .setValue(score);
-
-                database.child("personalScores")
-                        .child(mCurrentUser.getUid() + "-" + i)
-                        .child(Long.toString(baseDate + (j * 86400)))
-                        .setValue(score);
-
-                database.child("users")
-                        .child(mCurrentUser.getUid() + "-" + i)
-                        .setValue("Username-" + i);
-            }
-        }
-        */
     }
 
     /**

@@ -32,6 +32,14 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Calendar;
 
 public class MiniScoreboardAlarm extends BroadcastReceiver {
@@ -100,8 +108,55 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      * @param intent  Unused
      */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
 
+        /* Make sure the user is authenticated */
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+
+            /* Figure out what today's date is */
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            calendar.setTimeInMillis(0);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+            String date = Long.toString(calendar.getTimeInMillis() / 1000);
+
+            /* Read from the database where this user's daily score would be */
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
+                    .child("dailyScores")
+                    .child(date)
+                    .child(currentUser.getUid());
+
+            /* If there's no internet connection, no callback is ever called */
+            dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    DatabaseScoreEntry entry = dataSnapshot.getValue(DatabaseScoreEntry.class);
+                    if (entry == null) {
+                        /* No entry yet, show the notification */
+                        showNotification(context);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    /* No database connection, show the notification anyway */
+                    showNotification(context);
+                }
+            });
+        }
+    }
+
+    /**
+     * Show a notification to play the daily crossword
+     *
+     * @param context A Context to build the notification with
+     */
+    private void showNotification(Context context) {
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
         notificationIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));
@@ -122,7 +177,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
             mBuilder = mBuilder.setVibrate(new long[]{0, 500, 500, 500});
         }
 
-        /* If the user has sounds enabled, add a ding */
+            /* If the user has sounds enabled, add a ding */
         if (preferenceManager.getBoolean(context.getString(R.string.pref_key_daily_notification_sound), false)) {
             mBuilder = mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         }

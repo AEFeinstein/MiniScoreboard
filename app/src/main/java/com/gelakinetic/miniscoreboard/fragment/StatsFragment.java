@@ -234,8 +234,8 @@ public class StatsFragment extends MiniScoreboardFragment {
         mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
 
         /* Write the date at the top */
-        String username = ((MainActivity)getActivity()).getUserNameFromUid(uid);
-        ((TextView)view.findViewById(R.id.user_name_text_view)).setText(username);
+        String username = ((MainActivity) getActivity()).getUserNameFromUid(uid);
+        ((TextView) view.findViewById(R.id.user_name_text_view)).setText(username);
 
         /* TODO show other statistics */
 
