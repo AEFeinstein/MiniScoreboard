@@ -19,6 +19,8 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -245,6 +247,15 @@ public class DailyFragment extends MiniScoreboardFragment {
         String date = DateFormat
                 .getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(calendar.getTime());
         ((TextView)view.findViewById(R.id.date_text_view)).setText(date);
+
+        view.findViewById(R.id.play_puzzle_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent crosswordIntent = new Intent(Intent.ACTION_VIEW);
+                crosswordIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));
+                startActivity(crosswordIntent);
+            }
+        });
 
         /* TODO show this user's entry separately? */
 

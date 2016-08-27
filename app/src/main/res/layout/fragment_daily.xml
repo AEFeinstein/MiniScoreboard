@@ -32,6 +32,14 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_height="48dp"
         android:padding="8dp" />
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/play_puzzle_button"
+        android:text="@string/play_puzzle"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/statistics_recycler"
         android:layout_width="match_parent"
