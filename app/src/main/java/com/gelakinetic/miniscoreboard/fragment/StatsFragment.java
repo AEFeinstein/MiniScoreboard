@@ -46,6 +46,8 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 public class StatsFragment extends MiniScoreboardFragment {
 
+    private TextView mMeanTextView;
+    private TextView mStddevTextView;
     private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Query mStatsScoresDatabaseReference;
@@ -72,6 +74,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             }
             mStatisticsEntries.add(index, entry);
             mRecyclerView.getAdapter().notifyItemInserted(index);
+            updateStatistics();
         }
 
         /**
@@ -109,6 +112,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                     mRecyclerView.getAdapter().notifyItemInserted(newIndex);
                 }
             }
+            updateStatistics();
         }
 
         /**
@@ -140,6 +144,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 mStatisticsEntries.remove(index);
                 mRecyclerView.getAdapter().notifyItemRemoved(index);
             }
+            updateStatistics();
         }
 
         /**
@@ -237,6 +242,10 @@ public class StatsFragment extends MiniScoreboardFragment {
         String username = ((MainActivity) getActivity()).getUserNameFromUid(uid);
         ((TextView) view.findViewById(R.id.user_name_text_view)).setText(username);
 
+        /* Get references to the statistics text views */
+        mMeanTextView = (TextView) view.findViewById(R.id.mean_text_view);
+        mStddevTextView = (TextView) view.findViewById(R.id.stddev_text_view);
+
         /* TODO show other statistics */
 
         return view;
@@ -259,5 +268,59 @@ public class StatsFragment extends MiniScoreboardFragment {
     @Override
     public boolean shouldShowFab() {
         return false;
+    }
+
+    /**
+     * Updated the calculated statistics. This should be called whenever the entries change
+     */
+    private void updateStatistics() {
+        mMeanTextView.setText(String.format(getString(R.string.mean_label),
+                formatTime(getMean(mStatisticsEntries))));
+        mStddevTextView.setText(String.format(getString(R.string.stddev_label),
+                formatTime(getStdDev(mStatisticsEntries))));
+    }
+
+    /**
+     * Find the average value (mean) of the given puzzle solution times
+     *
+     * @param entries A collection of database entries with puzzle times
+     * @return The mean of all times in the ArrayList of entries
+     */
+    static double getMean(ArrayList<DatabaseScoreEntry> entries) {
+        double sum = 0.0;
+        for (DatabaseScoreEntry entry : entries) {
+            sum += entry.mPuzzleTime;
+        }
+        return sum / ((double) entries.size());
+    }
+
+    /**
+     * Find the standard deviation of the given puzzle solution times
+     *
+     * @param entries A collection of database entries with puzzle times
+     * @return The standard deviation of all times in the ArrayList of entries
+     */
+    static double getStdDev(ArrayList<DatabaseScoreEntry> entries) {
+
+        double mean = getMean(entries);
+        double temp = 0;
+        for (DatabaseScoreEntry entry : entries) {
+            temp += (entry.mPuzzleTime - mean) * (entry.mPuzzleTime - mean);
+        }
+        double variance = temp / ((double) entries.size());
+        return Math.sqrt(variance);
+    }
+
+    /**
+     * Given a time in seconds, format it nicely like 0:00.00
+     *
+     * @param seconds The time in seconds
+     * @return A string with the formatted time
+     */
+    static String formatTime(double seconds) {
+        return String.format("%01d:%02d.%02d",
+                ((int) seconds) / 60,
+                ((int) seconds) % 60,
+                (int) ((seconds - ((int) seconds)) * 100));
     }
 }

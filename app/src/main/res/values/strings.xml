@@ -48,6 +48,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="play_puzzle">Play Today\'s Crossword</string>
 
+    <string name="mean_label">Average Time: %s</string>
+    <string name="stddev_label">Standard Deviation: %s</string>
+
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>
 
