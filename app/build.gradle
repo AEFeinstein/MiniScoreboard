@@ -53,7 +53,7 @@ dependencies {
 
     compile 'com.code-troopers.betterpickers:library:3.0.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    compile 'com.diogobernardino:williamchart:2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

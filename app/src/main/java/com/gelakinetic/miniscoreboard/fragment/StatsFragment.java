@@ -28,6 +28,11 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.db.chart.Tools;
+import com.db.chart.model.BarSet;
+import com.db.chart.view.BarChartView;
+import com.db.chart.view.XController;
+import com.db.chart.view.YController;
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
@@ -46,8 +51,15 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 public class StatsFragment extends MiniScoreboardFragment {
 
+    /* Statistics text */
     private TextView mMeanTextView;
     private TextView mStddevTextView;
+
+    /* Bar Chart globals */
+    private static final int BIN_SIZE = 10;
+    private BarChartView mBarChartView;
+    BarSet mBars = new BarSet();
+
     private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Query mStatsScoresDatabaseReference;
@@ -74,7 +86,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             }
             mStatisticsEntries.add(index, entry);
             mRecyclerView.getAdapter().notifyItemInserted(index);
-            updateStatistics();
+            updateStatistics(entry.mPuzzleTime);
         }
 
         /**
@@ -112,7 +124,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                     mRecyclerView.getAdapter().notifyItemInserted(newIndex);
                 }
             }
-            updateStatistics();
+            updateStatistics(entry.mPuzzleTime);
         }
 
         /**
@@ -144,7 +156,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 mStatisticsEntries.remove(index);
                 mRecyclerView.getAdapter().notifyItemRemoved(index);
             }
-            updateStatistics();
+            updateStatistics(entry.mPuzzleTime);
         }
 
         /**
@@ -246,7 +258,18 @@ public class StatsFragment extends MiniScoreboardFragment {
         mMeanTextView = (TextView) view.findViewById(R.id.mean_text_view);
         mStddevTextView = (TextView) view.findViewById(R.id.stddev_text_view);
 
-        /* TODO show other statistics */
+        /* Get a reference to the bar chart */
+        mBarChartView = (BarChartView) view.findViewById(R.id.barchart);
+
+        /* Format the chart */
+        mBarChartView.setBarSpacing(Tools.fromDpToPx(40));
+        mBarChartView.setRoundCorners(Tools.fromDpToPx(2));
+        mBarChartView.setXAxis(true)
+                .setYAxis(true)
+                .setXLabels(XController.LabelPosition.OUTSIDE)
+                .setYLabels(YController.LabelPosition.OUTSIDE)
+                .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
+                .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
 
         return view;
     }
@@ -272,12 +295,16 @@ public class StatsFragment extends MiniScoreboardFragment {
 
     /**
      * Updated the calculated statistics. This should be called whenever the entries change
+     *
+     * @param newPuzzleTime The time for the latest entry
      */
-    private void updateStatistics() {
+    private void updateStatistics(int newPuzzleTime) {
         mMeanTextView.setText(String.format(getString(R.string.mean_label),
                 formatTime(getMean(mStatisticsEntries))));
         mStddevTextView.setText(String.format(getString(R.string.stddev_label),
                 formatTime(getStdDev(mStatisticsEntries))));
+
+        updateBarChart(newPuzzleTime);
     }
 
     /**
@@ -322,5 +349,34 @@ public class StatsFragment extends MiniScoreboardFragment {
                 ((int) seconds) / 60,
                 ((int) seconds) % 60,
                 (int) ((seconds - ((int) seconds)) * 100));
+    }
+
+    /**
+     * Update the bar chart with the latest data
+     *
+     * @param seconds The latest entry, in seconds
+     */
+    private void updateBarChart(int seconds) {
+
+        /* Figure out what entry this bin goes into */
+        int bin = seconds / BIN_SIZE;
+
+        /* Make sure that bin exists */
+        for (int i = mBars.size(); i < bin + 1; i++) {
+            mBars.addBar(String.format("%d-%d", i * BIN_SIZE, (i * BIN_SIZE) + BIN_SIZE - 1), 0);
+        }
+
+        /* Increment the bar by one */
+        mBars.getEntry(bin).setValue(mBars.getEntry(bin).getValue() + 1);
+
+        /* Color the bars */
+        mBars.setColor(getResources().getColor(R.color.colorAccent));
+
+        /* Reset the chart data */
+        mBarChartView.getData().clear();
+        mBarChartView.addData(mBars);
+
+        /* Show the data */
+        mBarChartView.show();
     }
 }
