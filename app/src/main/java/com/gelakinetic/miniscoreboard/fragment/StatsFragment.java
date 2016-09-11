@@ -250,7 +250,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 .orderByKey();
         mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
 
-        /* Write the date at the top */
+        /* Write the username at the top */
         String username = ((MainActivity) getActivity()).getUserNameFromUid(uid);
         ((TextView) view.findViewById(R.id.user_name_text_view)).setText(username);
 
@@ -363,7 +363,7 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Make sure that bin exists */
         for (int i = mBars.size(); i < bin + 1; i++) {
-            mBars.addBar(String.format("%d-%d", i * BIN_SIZE, (i * BIN_SIZE) + BIN_SIZE - 1), 0);
+            mBars.addBar(String.format("%d", (i + 1) * BIN_SIZE), 0);
         }
 
         /* Increment the bar by one */

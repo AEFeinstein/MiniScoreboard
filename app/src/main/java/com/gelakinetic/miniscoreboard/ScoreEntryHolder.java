@@ -19,11 +19,12 @@
 
 package com.gelakinetic.miniscoreboard;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-public class ScoreEntryHolder extends RecyclerView.ViewHolder {
+import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
+
+public class ScoreEntryHolder extends ChildViewHolder {
 
     /* The view for this card */
     View mView;

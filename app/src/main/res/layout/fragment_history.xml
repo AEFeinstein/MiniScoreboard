@@ -19,18 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gelakinetic.miniscoreboard.fragment.HistoryFragment">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/history_recycler"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/coming_soon"
-        android:textSize="40sp"
-        android:textStyle="bold" />
-
-</RelativeLayout>
+        tools:listitem="@layout/statistics_card" />
+</android.support.v7.widget.LinearLayoutCompat>

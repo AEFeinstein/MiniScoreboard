@@ -109,6 +109,9 @@ public class DailyFragment extends MiniScoreboardFragment {
                     mDailyEntries.remove(oldIndex);
                     mRecyclerView.getAdapter().notifyItemRemoved(oldIndex);
                     /* Then add it in it's new position */
+                    if(newIndex > mDailyEntries.size() - 1) {
+                        newIndex = mDailyEntries.size() - 1;
+                    }
                     mDailyEntries.add(newIndex, entry);
                     mRecyclerView.getAdapter().notifyItemInserted(newIndex);
                 }
