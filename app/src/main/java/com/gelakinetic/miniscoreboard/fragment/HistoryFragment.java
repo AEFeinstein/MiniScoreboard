@@ -57,10 +57,10 @@ public class HistoryFragment extends MiniScoreboardFragment {
          *
          * @param dataSnapshot The child added. The date is the key and its children are
          *                     DatabaseScoreEntry objects
-         * @param s Unused
+         * @param key Unused
          */
         @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        public void onChildAdded(DataSnapshot dataSnapshot, String key) {
             /* Get the object from the database */
             Long date = Long.parseLong(dataSnapshot.getKey());
 
@@ -96,7 +96,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
          *
          * @param dataSnapshot The child changed. The date is the key and its children are
          *                     DatabaseScoreEntry objects
-         * @param s Unused
+         * @param key Unused
          */
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String key) {
@@ -162,10 +162,10 @@ public class HistoryFragment extends MiniScoreboardFragment {
          * Called when a child is moved in the database. This is handled by onChildChanged()
          *
          * @param dataSnapshot unused
-         * @param s Unused
+         * @param key Unused
          */
         @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        public void onChildMoved(DataSnapshot dataSnapshot, String key) {
             /* Always follows onChildChanged which caused the shuffle.
              * On onChildChanged handles it all
              */
@@ -251,6 +251,9 @@ public class HistoryFragment extends MiniScoreboardFragment {
             public ScoreEntryHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
                 View itemMessage = getActivity().getLayoutInflater()
                         .inflate(R.layout.statistics_card, childViewGroup, false);
+
+                /* Show extra padding for this card */
+                itemMessage.findViewById(R.id.padding_view).setVisibility(View.VISIBLE);
                 return new ScoreEntryHolder(itemMessage);
             }
 
@@ -263,7 +266,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
             @Override
             public void onBindChildViewHolder(ScoreEntryHolder childViewHolder, int position,
                                               Object childListItem) {
-                childViewHolder.setTitleText("\t\t" + ((DatabaseScoreEntry) childListItem).mUsername);
+                childViewHolder.setTitleText(((DatabaseScoreEntry) childListItem).mUsername);
                 childViewHolder.setPuzzleTimeText(((DatabaseScoreEntry) childListItem).getPuzzleTime());
             }
         };
