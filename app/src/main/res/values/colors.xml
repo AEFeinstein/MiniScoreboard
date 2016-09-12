@@ -28,4 +28,16 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <color name="background_color">#F2F2F2</color>
     <color name="card_color">#FFFFFF</color>
 
+    <color name="barColor1">#448AFF</color>
+    <color name="barColor2">#FF5252</color>
+    <color name="barColor3">#4CAF50</color>
+    <color name="barColor4">#C0CA33</color>
+
+    <array name="barColors">
+        <item>@color/barColor1</item>
+        <item>@color/barColor2</item>
+        <item>@color/barColor3</item>
+        <item>@color/barColor4</item>
+    </array>
+
 </resources>

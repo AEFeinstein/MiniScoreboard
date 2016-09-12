@@ -23,49 +23,57 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/user_name_text_view"
-        style="@android:style/TextAppearance.Large"
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/user_name_text_view"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/mean_text_view"
-        style="@android:style/TextAppearance.Large"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stddev_text_view"
-        style="@android:style/TextAppearance.Large"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mean_text_view"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/stddev_text_view"
+            style="@android:style/TextAppearance.Large"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical" />
 
-    <com.db.chart.view.BarChartView
-        android:id="@+id/barchart"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent" />
+        <com.db.chart.view.BarChartView
+            android:id="@+id/barchart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/statistics_recycler"

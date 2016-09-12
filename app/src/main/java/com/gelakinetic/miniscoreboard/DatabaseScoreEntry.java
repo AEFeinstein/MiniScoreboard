@@ -125,7 +125,12 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
          */
         @Override
         public int compare(DatabaseScoreEntry scoreEntry1, DatabaseScoreEntry scoreEntry2) {
-            return (Integer.valueOf(scoreEntry1.mPuzzleTime)).compareTo(scoreEntry2.mPuzzleTime);
+            if (scoreEntry1.mPuzzleTime > scoreEntry2.mPuzzleTime) {
+                return 1;
+            } else if (scoreEntry1.mPuzzleTime < scoreEntry2.mPuzzleTime) {
+                return -1;
+            }
+            return 0;
         }
     }
 
@@ -136,13 +141,18 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
          *
          * @param scoreEntry1 One DatabaseScoreEntry to compare
          * @param scoreEntry2 Another DatabaseScoreEntry to compare
-         * @return a negative value if scoreEntry1 came before scoreEntry2.
+         * @return a negative value if scoreEntry2 came before scoreEntry1.
          * 0 if the two entries are on the same day.
-         * a positive value if scoreEntry1 is after scoreEntry2.
+         * a positive value if scoreEntry2 is after scoreEntry1.
          */
         @Override
         public int compare(DatabaseScoreEntry scoreEntry1, DatabaseScoreEntry scoreEntry2) {
-            return (Long.valueOf(scoreEntry1.mDate)).compareTo(scoreEntry2.mDate);
+            if (scoreEntry1.mDate > scoreEntry2.mDate) {
+                return -1;
+            } else if (scoreEntry1.mDate < scoreEntry2.mDate) {
+                return 1;
+            }
+            return 0;
         }
     }
 }
