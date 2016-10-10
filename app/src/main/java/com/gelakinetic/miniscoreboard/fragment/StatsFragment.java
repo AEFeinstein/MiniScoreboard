@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
+import com.db.chart.view.AxisController;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
@@ -411,6 +412,11 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Reset the chart data */
         mBarChartView.getData().clear();
+
+        /* Format a little, because it's displayed in such a tight spot */
+        mBarChartView.setBarSpacing(0);
+        mBarChartView.setXLabels(AxisController.LabelPosition.NONE);
+        mBarChartView.setYLabels(AxisController.LabelPosition.NONE);
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {
