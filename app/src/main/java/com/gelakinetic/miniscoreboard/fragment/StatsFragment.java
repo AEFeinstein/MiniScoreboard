@@ -30,10 +30,8 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.BarChartView;
-import com.db.chart.view.XController;
-import com.db.chart.view.YController;
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
@@ -269,8 +267,8 @@ public class StatsFragment extends MiniScoreboardFragment {
         mBarChartView.setRoundCorners(Tools.fromDpToPx(2));
         mBarChartView.setXAxis(true)
                 .setYAxis(true)
-                .setXLabels(XController.LabelPosition.OUTSIDE)
-                .setYLabels(YController.LabelPosition.OUTSIDE)
+                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
                 .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
                 .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
 
@@ -415,8 +413,8 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Format a little, because it's displayed in such a tight spot */
         mBarChartView.setBarSpacing(0);
-        mBarChartView.setXLabels(AxisController.LabelPosition.NONE);
-        mBarChartView.setYLabels(AxisController.LabelPosition.NONE);
+        mBarChartView.setXLabels(AxisRenderer.LabelPosition.NONE);
+        mBarChartView.setYLabels(AxisRenderer.LabelPosition.NONE);
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {
