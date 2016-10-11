@@ -21,7 +21,9 @@ package com.gelakinetic.miniscoreboard.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -126,6 +128,12 @@ public class ScoreInputDialogFragment extends DialogFragment
 
                         /* We're done here */
                         dialogInterface.dismiss();
+
+                        /* Save the time this puzzle was submitted */
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong(getString(R.string.pref_key_last_submission), System.currentTimeMillis());
+                        editor.apply();
                     }
                 })
                 .setNegativeButton(R.string.button_cancel_text,

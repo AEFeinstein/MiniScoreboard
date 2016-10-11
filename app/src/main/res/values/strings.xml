@@ -77,6 +77,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_key_pref_delete_acct_btn">delete_acct</string>
     <string name="pref_delete_acct_title">Delete Your Account</string>
 
+    <string name="pref_key_last_submission">last_submission</string>
+
     <!-- Notification Strings -->
     <string name="notification_title">Daily Puzzle</string>
     <string name="notification_summary">Play the daily Mini Crossword online</string>
