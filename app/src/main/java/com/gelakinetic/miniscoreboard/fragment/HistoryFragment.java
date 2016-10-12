@@ -71,12 +71,12 @@ public class HistoryFragment extends MiniScoreboardFragment {
              * binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
-            int index = Collections.binarySearch(mDailyEntries, dailyEntry);
-            if (index < 0) {
-                index = -1 * (index + 1);
+            int dailyIndex = Collections.binarySearch(mDailyEntries, dailyEntry);
+            if (dailyIndex < 0) {
+                dailyIndex = -1 * (dailyIndex + 1);
             }
-            mDailyEntries.add(index, dailyEntry);
-            mAdapter.notifyParentItemInserted(index);
+            mDailyEntries.add(dailyIndex, dailyEntry);
+            mAdapter.notifyParentItemInserted(dailyIndex);
 
             /* For all the scores that day, save them in an array */
             for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -85,9 +85,15 @@ public class HistoryFragment extends MiniScoreboardFragment {
                 scoreEntry.mUsername = ((MainActivity) getActivity()).getUserNameFromUid(scoreEntry.mUid);
                 scoreEntry.mDate = date;
 
-                mDailyEntries.get(index).mScores.add(scoreEntry);
-                /* Notify the adapter that a child has been added */
-                mAdapter.notifyChildItemInserted(index, mDailyEntries.get(index).mScores.size() - 1);
+                /* Search for where this entry should be inserted */
+                int scoreIndex = Collections.binarySearch(mDailyEntries.get(dailyIndex).mScores, scoreEntry);
+                if (scoreIndex < 0) {
+                    /* Insert the entry, sorted */
+                    scoreIndex = -1 * (scoreIndex + 1);
+                    mDailyEntries.get(dailyIndex).mScores.add(scoreIndex, scoreEntry);
+                    /* Notify the adapter that a child has been added */
+                    mAdapter.notifyChildItemInserted(dailyIndex, scoreIndex);
+                }
             }
         }
 
@@ -115,6 +121,8 @@ public class HistoryFragment extends MiniScoreboardFragment {
                 scoreEntry.mDate = date;
                 scoresTmp.add(scoreEntry);
             }
+            /* Then sort them */
+            Collections.sort(scoresTmp);
 
             /* Find where it is in the daily entries array */
             int oldIndex = mDailyEntries.indexOf(dailyEntry);

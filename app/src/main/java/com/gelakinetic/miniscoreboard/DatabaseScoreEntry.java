@@ -130,7 +130,8 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
             } else if (scoreEntry1.mPuzzleTime < scoreEntry2.mPuzzleTime) {
                 return -1;
             }
-            return 0;
+            /* If the times are equal, compare based on UID for consistency */
+            return scoreEntry1.mUid.compareTo(scoreEntry2.mUid);
         }
     }
 

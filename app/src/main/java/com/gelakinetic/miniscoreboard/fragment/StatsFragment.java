@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
+import com.db.chart.model.ChartEntry;
 import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.BarChartView;
 import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
@@ -401,12 +402,21 @@ public class StatsFragment extends MiniScoreboardFragment {
         Integer keySet[] = new Integer[mBarsHashMap.size()];
         mBarsHashMap.keySet().toArray(keySet);
         Arrays.sort(keySet);
-        /* Color each bar */
+        /* Color each bar, find the largest bar */
+        float maxValue = 0;
         for (int key : keySet) {
             mBarsHashMap.get(key).setColor(colors[colorIdx]);
             colorIdx = (colorIdx + 1) % colors.length;
-        }
 
+            /* For every entry in this chart, find the largest entry */
+            for (ChartEntry entry : mBarsHashMap.get(key).getEntries()) {
+                if(entry.getValue() > maxValue) {
+                    maxValue = entry.getValue();
+                }
+            }
+
+            // TODO once labels are rewritable, replace some labels with "" for spacing
+        }
 
         /* Reset the chart data */
         mBarChartView.getData().clear();
@@ -414,7 +424,9 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Format a little, because it's displayed in such a tight spot */
         mBarChartView.setBarSpacing(0);
         mBarChartView.setXLabels(AxisRenderer.LabelPosition.NONE);
-        mBarChartView.setYLabels(AxisRenderer.LabelPosition.NONE);
+
+        /* Set the vertical step on the chart to display 5 marks */
+        mBarChartView.setStep((int) Math.ceil(maxValue / 4));
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {
