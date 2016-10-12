@@ -59,6 +59,8 @@ public class StatsFragment extends MiniScoreboardFragment {
 
     /* Bar Chart globals */
     private static final int BIN_SIZE = 10;
+    private static final float MAX_NUM_X_LABELS = 10;
+    private static final float MAX_NUM_Y_LABELS = 5;
     private BarChartView mBarChartView;
     HashMap<Integer, BarSet> mBarsHashMap = new HashMap<>(2);
 
@@ -398,24 +400,42 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Color the bars, first get the color array */
         int colors[] = getResources().getIntArray(R.array.barColors);
         int colorIdx = 0;
+
         /* Get and sort the keys from the hash map */
         Integer keySet[] = new Integer[mBarsHashMap.size()];
         mBarsHashMap.keySet().toArray(keySet);
         Arrays.sort(keySet);
-        /* Color each bar, find the largest bar */
+
+        /* Store the largest bar value here, for setting the Y axis labels */
         float maxValue = 0;
+        /* Calculate how often to write X axis labels (10 total) */
+        int labelMod = (int) Math.ceil(maxNumBins / MAX_NUM_X_LABELS);
+
+        /* Format the bars, color & label */
         for (int key : keySet) {
+            /* Color all the bars in this bar set, then increment the color index */
             mBarsHashMap.get(key).setColor(colors[colorIdx]);
             colorIdx = (colorIdx + 1) % colors.length;
 
-            /* For every entry in this chart, find the largest entry */
+            /* For every entry in this bar set, find the largest entry */
             for (ChartEntry entry : mBarsHashMap.get(key).getEntries()) {
-                if(entry.getValue() > maxValue) {
+                if (entry.getValue() > maxValue) {
                     maxValue = entry.getValue();
                 }
             }
 
-            // TODO once labels are rewritable, replace some labels with "" for spacing
+            /* For every entry in this bar set, write the label, taking into account spacing */
+            for (int barIndex = 0; barIndex < mBarsHashMap.get(key).getEntries().size(); barIndex++) {
+                if (labelMod == 0 || barIndex % labelMod == 0) {
+                    /* Write a label if it's at an appropriate index */
+                    mBarsHashMap.get(key).getEntries().get(barIndex)
+                            .setLabel(String.format("%d", (barIndex + 1) * BIN_SIZE));
+                } else {
+                    /* Otherwise clear it */
+                    mBarsHashMap.get(key).getEntries().get(barIndex)
+                            .setLabel("");
+                }
+            }
         }
 
         /* Reset the chart data */
@@ -423,10 +443,9 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Format a little, because it's displayed in such a tight spot */
         mBarChartView.setBarSpacing(0);
-        mBarChartView.setXLabels(AxisRenderer.LabelPosition.NONE);
 
         /* Set the vertical step on the chart to display 5 marks */
-        mBarChartView.setStep((int) Math.ceil(maxValue / 4));
+        mBarChartView.setStep((int) Math.ceil(maxValue / MAX_NUM_Y_LABELS));
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {
