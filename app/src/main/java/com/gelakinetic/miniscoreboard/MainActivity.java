@@ -54,6 +54,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -264,6 +265,8 @@ public class MainActivity extends AppCompatActivity {
         /* Set up shared preferences */
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
+
+        //checkForOldWinners();
     }
 
     /**
@@ -448,6 +451,87 @@ public class MainActivity extends AppCompatActivity {
                 .child(mCurrentUser.getUid())
                 .child(Long.toString(date))
                 .setValue(score);
+
+        checkForWinner(database, date);
+    }
+
+    /**
+     * TODO document
+     */
+    private void checkForOldWinners() {
+        FirebaseDatabase.getInstance().getReference().child("dailyScores").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    checkForWinner(FirebaseDatabase.getInstance().getReference(), Long.parseLong(snapshot.getKey()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * TODO document
+     *
+     * @param date
+     */
+    private void checkForWinner(DatabaseReference database, final long date) {
+        /* Get all the scores for today */
+        database.child("dailyScores")
+                .child(Long.toString(date))
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            /**
+                             * Called when the requested data from the database is fetched.
+                             * After the initial read, a listener will be set up for changes
+                             *
+                             * @param dataSnapshot The data from the database, a bunch of usernames with uid keys
+                             */
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                ArrayList<String> winners = new ArrayList<>();
+                                int winnerTime = Integer.MAX_VALUE;
+
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    DatabaseScoreEntry dailyEntry = snapshot.getValue(DatabaseScoreEntry.class);
+                                    if (dailyEntry.mPuzzleTime < winnerTime) {
+                                        /* Undisputed winner, clear out the priors */
+                                        winners.clear();
+                                        winners.add(snapshot.getKey()); /* UID */
+                                        /* Record the new time */
+                                        winnerTime = dailyEntry.mPuzzleTime;
+                                    } else if (dailyEntry.mPuzzleTime == winnerTime) {
+                                        /* Tie for the win, add the new UID */
+                                        winners.add(snapshot.getKey()); /* UID */
+                                    }
+                                }
+
+                                /* Write the winners to the database */
+                                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+                                /* Submit the data, first to daily scores then to personal scores. */
+                                for(String winner : winners) {
+                                    database.child("dailyWinners")
+                                            .child(Long.toString(date) + "-" + winners.indexOf(winner))
+                                            .setValue(winner);
+                                }
+                            }
+
+                            /**
+                             * Called when the database operation is cancelled
+                             *
+                             * @param databaseError The database error that cancelled the operation
+                             */
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                /* TODO some error handling */
+                            }
+                        });
     }
 
     /**

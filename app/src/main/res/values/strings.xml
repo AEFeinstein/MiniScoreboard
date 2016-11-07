@@ -50,6 +50,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="mean_label">Average Time: %s</string>
     <string name="stddev_label">Standard Deviation: %s</string>
+    <string name="wins_label">Wins: %d</string>
 
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>

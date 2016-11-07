@@ -41,8 +41,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +56,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     /* Statistics text */
     private TextView mMeanTextView;
     private TextView mStddevTextView;
+    private TextView mWinsTextView;
 
     /* Bar Chart globals */
     private static final int BIN_SIZE = 10;
@@ -64,9 +65,11 @@ public class StatsFragment extends MiniScoreboardFragment {
     private BarChartView mBarChartView;
     HashMap<Integer, BarSet> mBarsHashMap = new HashMap<>(2);
 
+    private int mWins = 0;
+
     private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private Query mStatsScoresDatabaseReference;
+    private DatabaseReference mStatsScoresDatabaseReference;
     private ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
         /**
          * Called when a child is added to the database. The key for this value is the date
@@ -173,6 +176,42 @@ public class StatsFragment extends MiniScoreboardFragment {
             /* TODO some error handling */
         }
     };
+    private ChildEventListener mWinnersChildEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String key) {
+            if (key != null) {
+                mWins++;
+                if (isAdded() && mWinsTextView != null) {
+                    mWinsTextView.setText(String.format(getString(R.string.wins_label), mWins));
+                }
+            }
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            /* Don't care if a win gets changed, only added or removed */
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getKey() != null) {
+                mWins--;
+                if (isAdded() && mWinsTextView != null) {
+                    mWinsTextView.setText(String.format(getString(R.string.wins_label), mWins));
+                }
+            }
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            /* Don't care if a win gets moved, only added or removed */
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            /* TODO error handling? */
+        }
+    };
 
     /**
      * Required empty public constructor
@@ -248,11 +287,19 @@ public class StatsFragment extends MiniScoreboardFragment {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         /* Get this daily data, and order it by date */
-        mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference()
+        mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mStatsScoresDatabaseReference
                 .child("personalScores")
                 .child(uid)
-                .orderByKey();
-        mStatsScoresDatabaseReference.addChildEventListener(mStatsScoresChildEventListener);
+                .orderByKey()
+                .addChildEventListener(mStatsScoresChildEventListener);
+
+        mStatsScoresDatabaseReference
+                .child("dailyWinners")
+                .orderByValue()
+                .startAt(uid)
+                .endAt(uid)
+                .addChildEventListener(mWinnersChildEventListener);
 
         /* Write the username at the top */
         String username = ((MainActivity) getActivity()).getUserNameFromUid(uid);
@@ -261,6 +308,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Get references to the statistics text views */
         mMeanTextView = (TextView) view.findViewById(R.id.mean_text_view);
         mStddevTextView = (TextView) view.findViewById(R.id.stddev_text_view);
+        mWinsTextView = (TextView) view.findViewById(R.id.wins_text_view);
 
         /* Get a reference to the bar chart */
         mBarChartView = (BarChartView) view.findViewById(R.id.barchart);
@@ -286,6 +334,7 @@ public class StatsFragment extends MiniScoreboardFragment {
         super.onDestroyView();
         /* Remove the database listener, and clear the entries */
         mStatsScoresDatabaseReference.removeEventListener(mStatsScoresChildEventListener);
+        mStatsScoresDatabaseReference.removeEventListener(mWinnersChildEventListener);
         mStatisticsEntries.clear();
     }
 
