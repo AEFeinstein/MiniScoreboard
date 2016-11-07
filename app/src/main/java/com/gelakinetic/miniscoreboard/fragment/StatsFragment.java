@@ -58,12 +58,10 @@ public class StatsFragment extends MiniScoreboardFragment {
     private TextView mStddevTextView;
     private TextView mWinsTextView;
 
-    /* Bar Chart globals */
-    private static final int BIN_SIZE = 10;
-    private static final float MAX_NUM_X_LABELS = 10;
+    private static final float MAX_NUM_BINS = 30;
+    private static final float MAX_NUM_X_LABELS = 15;
     private static final float MAX_NUM_Y_LABELS = 5;
     private BarChartView mBarChartView;
-    HashMap<Integer, BarSet> mBarsHashMap = new HashMap<>(2);
 
     private int mWins = 0;
 
@@ -93,7 +91,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             }
             mStatisticsEntries.add(index, entry);
             mRecyclerView.getAdapter().notifyItemInserted(index);
-            updateStatistics(entry.mPuzzleTime, entry.mPuzzleSize);
+            updateStatistics();
         }
 
         /**
@@ -131,7 +129,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                     mRecyclerView.getAdapter().notifyItemInserted(newIndex);
                 }
             }
-            updateStatistics(entry.mPuzzleTime, entry.mPuzzleSize);
+            updateStatistics();
         }
 
         /**
@@ -163,7 +161,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 mStatisticsEntries.remove(index);
                 mRecyclerView.getAdapter().notifyItemRemoved(index);
             }
-            updateStatistics(entry.mPuzzleTime, entry.mPuzzleSize);
+            updateStatistics();
         }
 
         /**
@@ -348,17 +346,15 @@ public class StatsFragment extends MiniScoreboardFragment {
 
     /**
      * Updated the calculated statistics. This should be called whenever the entries change
-     *
-     * @param newPuzzleTime The time for the latest entry
-     * @param size          The latest entry's size (5x5 or 7x7)
      */
-    private void updateStatistics(int newPuzzleTime, int size) {
-        mMeanTextView.setText(String.format(getString(R.string.mean_label),
-                formatTime(getMean(mStatisticsEntries))));
-        mStddevTextView.setText(String.format(getString(R.string.stddev_label),
-                formatTime(getStdDev(mStatisticsEntries))));
-
-        updateBarChart(newPuzzleTime, size);
+    private void updateStatistics() {
+        if (isAdded() && mMeanTextView != null) {
+            mMeanTextView.setText(String.format(getString(R.string.mean_label),
+                    formatTime(getMean(mStatisticsEntries))));
+            mStddevTextView.setText(String.format(getString(R.string.stddev_label),
+                    formatTime(getStdDev(mStatisticsEntries))));
+            updateBarChart(mStatisticsEntries);
+        }
     }
 
     /**
@@ -407,44 +403,56 @@ public class StatsFragment extends MiniScoreboardFragment {
 
     /**
      * Update the bar chart with the latest data
-     *
-     * @param seconds The latest entry, in seconds
-     * @param size    The latest entry's size (5x5 or 7x7)
      */
-    private void updateBarChart(int seconds, int size) {
+    private void updateBarChart(ArrayList<DatabaseScoreEntry> entries) {
 
-        /* Check if the hash map contains the size for this puzzle */
-        if (!mBarsHashMap.containsKey(size)) {
-            /* Add it if it does not exist */
-            mBarsHashMap.put(size, new BarSet());
-        }
+        HashMap<Integer, BarSet> mBarsHashMap = new HashMap<>();
 
-        /* Grab the barSet from the hash map */
-        BarSet barSet = mBarsHashMap.get(size);
+        /* Calculate how often to write X axis labels (MAX_NUM_X_LABELS total) */
+        int labelMod = (int) Math.ceil(MAX_NUM_BINS / MAX_NUM_X_LABELS);
 
-        /* Figure out what entry this bin goes into */
-        int bin = seconds / BIN_SIZE;
-
-        /* Find the largest bin across all BarSets */
-        int maxNumBins = bin + 1; /* This entry's bin */
-        for (int key : mBarsHashMap.keySet()) {
-            int binSize = mBarsHashMap.get(key).size();
-            if (binSize > maxNumBins) {
-                maxNumBins = binSize;
+        /* Find the largest time it took to solve a puzzle */
+        int largestTime = 0;
+        for (DatabaseScoreEntry entry : entries) {
+            if (entry.mPuzzleTime > largestTime) {
+                largestTime = entry.mPuzzleTime;
             }
         }
 
-        /* Make sure that bin exists, for all BarSets */
-        for (int i = 0; i < maxNumBins; i++) {
-            for (int key : mBarsHashMap.keySet()) {
-                if (mBarsHashMap.get(key).size() < i + 1) {
-                    mBarsHashMap.get(key).addBar(String.format("%d", (i + 1) * BIN_SIZE), 0);
+        /* Figure out how large each bin will be */
+        int binSize = (int) Math.ceil(largestTime / MAX_NUM_BINS);
+
+        /* For every score */
+        for (DatabaseScoreEntry entry : entries) {
+            /* Check if the hash map contains the size for this puzzle */
+            if (!mBarsHashMap.containsKey(entry.mPuzzleSize)) {
+                /* Create a new BarSet */
+                BarSet newBarSet = new BarSet();
+
+                /* Add all the bars to the BarSet */
+                for (int i = 0; i < MAX_NUM_BINS; i++) {
+                    if (labelMod == 0 || i % labelMod == 0) {
+                        /* Label */
+                        newBarSet.addBar(String.format("%d", (i + 1) * binSize), 0);
+                    } else {
+                        /* No Label */
+                        newBarSet.addBar("", 0);
+                    }
                 }
-            }
-        }
 
-        /* Increment the bar by one */
-        barSet.getEntry(bin).setValue(barSet.getEntry(bin).getValue() + 1);
+                /* Add the BarSet to the HashMap of all BarSets */
+                mBarsHashMap.put(entry.mPuzzleSize, newBarSet);
+            }
+
+            /* Grab the barSet from the hash map */
+            BarSet barSet = mBarsHashMap.get(entry.mPuzzleSize);
+
+            /* Figure out what entry this bin goes into */
+            int bin = entry.mPuzzleTime / binSize;
+
+            /* Increment the bar by one */
+            barSet.getEntry(bin).setValue(barSet.getEntry(bin).getValue() + 1);
+        }
 
         /* Color the bars, first get the color array */
         int colors[] = getResources().getIntArray(R.array.barColors);
@@ -457,8 +465,6 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Store the largest bar value here, for setting the Y axis labels */
         float maxValue = 0;
-        /* Calculate how often to write X axis labels (10 total) */
-        int labelMod = (int) Math.ceil(maxNumBins / MAX_NUM_X_LABELS);
 
         /* Format the bars, color & label */
         for (int key : keySet) {
@@ -470,19 +476,6 @@ public class StatsFragment extends MiniScoreboardFragment {
             for (ChartEntry entry : mBarsHashMap.get(key).getEntries()) {
                 if (entry.getValue() > maxValue) {
                     maxValue = entry.getValue();
-                }
-            }
-
-            /* For every entry in this bar set, write the label, taking into account spacing */
-            for (int barIndex = 0; barIndex < mBarsHashMap.get(key).getEntries().size(); barIndex++) {
-                if (labelMod == 0 || barIndex % labelMod == 0) {
-                    /* Write a label if it's at an appropriate index */
-                    mBarsHashMap.get(key).getEntries().get(barIndex)
-                            .setLabel(String.format("%d", (barIndex + 1) * BIN_SIZE));
-                } else {
-                    /* Otherwise clear it */
-                    mBarsHashMap.get(key).getEntries().get(barIndex)
-                            .setLabel("");
                 }
             }
         }
