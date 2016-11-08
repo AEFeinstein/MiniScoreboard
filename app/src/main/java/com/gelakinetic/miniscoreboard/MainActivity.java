@@ -178,9 +178,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* Clear any pending notifications */
-        MiniScoreboardAlarm.clearNotification(this);
-
         /* Make sure the user is authenticated */
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mCurrentUser == null) {
@@ -271,6 +268,9 @@ public class MainActivity extends AppCompatActivity {
 
         /* If this was launched from the notification to submit a score, "click" the fab */
         if (getIntent().getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
+            /* Clear any pending notifications */
+            MiniScoreboardAlarm.clearNotification(this);
+
             mFab.callOnClick();
         }
 
@@ -287,6 +287,9 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         /* If this was launched from the notification to submit a score, "click" the fab */
         if (intent.getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
+            /* Clear any pending notifications */
+            MiniScoreboardAlarm.clearNotification(this);
+
             mFab.callOnClick();
         }
     }
