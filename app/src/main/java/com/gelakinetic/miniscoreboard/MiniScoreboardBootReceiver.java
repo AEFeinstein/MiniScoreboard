@@ -40,7 +40,7 @@ public class MiniScoreboardBootReceiver extends BroadcastReceiver {
             if (PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.pref_key_daily_notification), false)) {
                 /* alarm is enabled */
-                MiniScoreboardAlarm.setAlarm(context);
+                MiniScoreboardAlarm.setAlarm(context, false);
             } else {
                 /* alarm is disabled */
                 MiniScoreboardAlarm.cancelAlarm(context);

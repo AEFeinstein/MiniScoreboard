@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
                     if (prefKey.equals(getString(R.string.pref_key_daily_notification))) {
                         if (mSharedPreferences.getBoolean(prefKey, false)) {
-                            MiniScoreboardAlarm.setAlarm(MainActivity.this);
+                            MiniScoreboardAlarm.setAlarm(MainActivity.this, false);
                         } else {
                             MiniScoreboardAlarm.cancelAlarm(MainActivity.this);
                         }

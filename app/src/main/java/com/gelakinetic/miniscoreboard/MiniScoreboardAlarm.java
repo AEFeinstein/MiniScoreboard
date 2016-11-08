@@ -56,7 +56,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to set the alarm with
      */
-    public static void setAlarm(Context context) {
+    public static void setAlarm(Context context, boolean resetting) {
 
         /* First, cancel any pending alarms, just in case */
         cancelAlarm(context);
@@ -69,9 +69,11 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-        /* If noon already passed, set it to tomorrow's noon */
-        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.setTimeInMillis(calendar.getTimeInMillis() + (24 * 60 * 60 * 1000));
+        /* If noon already passed, set it to tomorrow's noon
+         * Always add a day if the alarm is being reset
+         */
+        if (resetting || calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DATE, 1);
         }
 
         /* Set it to repeat daily in an inexact fashion. This saves battery because the system
@@ -117,6 +119,9 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
         if (todaysDay != lastDay) {
             showNotification(context);
         }
+
+        /* Reschedule the next alarm, this should take care of DST */
+        setAlarm(context, true);
     }
 
     /**
