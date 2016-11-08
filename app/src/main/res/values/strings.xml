@@ -52,6 +52,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="stddev_label">Standard Deviation: %s</string>
     <string name="wins_label">Wins: %d</string>
 
+    <string name="action_play_crossword">Play Crossword</string>
+    <string name="action_submit_score">Submit Score</string>
+
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>
 

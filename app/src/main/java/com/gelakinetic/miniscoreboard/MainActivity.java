@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /* Clear any pending notifications */
+        MiniScoreboardAlarm.clearNotification(this);
+
         /* Make sure the user is authenticated */
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mCurrentUser == null) {
@@ -266,7 +269,26 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
 
+        /* If this was launched from the notification to submit a score, "click" the fab */
+        if (getIntent().getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
+            mFab.callOnClick();
+        }
+
         //checkForOldWinners();
+    }
+
+    /**
+     * TODO document
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        /* If this was launched from the notification to submit a score, "click" the fab */
+        if (intent.getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
+            mFab.callOnClick();
+        }
     }
 
     /**
@@ -462,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("dailyScores").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     checkForWinner(FirebaseDatabase.getInstance().getReference(), Long.parseLong(snapshot.getKey()));
                 }
             }
@@ -515,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
                                 DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
                                 /* Submit the data, first to daily scores then to personal scores. */
-                                for(String winner : winners) {
+                                for (String winner : winners) {
                                     database.child("dailyWinners")
                                             .child(Long.toString(date) + "-" + winners.indexOf(winner))
                                             .setValue(winner);

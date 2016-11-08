@@ -38,6 +38,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
 
     /* A random ID for the notification displayed */
     private static final int NOTIFICATION_ID = 50377;
+    public static final String FROM_NOTIFICATION = "FROM_NOTIFICATION";
 
     /**
      * Build and return a PendingIntent for the Alarm to call
@@ -123,11 +124,16 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to build the notification with
      */
-    private void showNotification(Context context) {
+    static void showNotification(Context context) {
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
         notificationIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(FROM_NOTIFICATION, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent submitScoreIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /* Set the notification parameters */
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
@@ -135,7 +141,9 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_summary))
-                .setContentIntent(contentIntent);
+                .setContentIntent(playCrosswordIntent)
+                .addAction(new NotificationCompat.Action.Builder(0, context.getString(R.string.action_play_crossword), playCrosswordIntent).build())
+                .addAction(new NotificationCompat.Action.Builder(0, context.getString(R.string.action_submit_score), submitScoreIntent).build());
 
         SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -155,5 +163,16 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
 
         /* Build the notification and issue it. */
         mNotifyMgr.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    /**
+     * Clear the daily crossword notification
+     *
+     * @param context A Context to clear the notification from
+     */
+    static void clearNotification(Context context) {
+        NotificationManager mNotifyMgr =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotifyMgr.cancel(NOTIFICATION_ID);
     }
 }

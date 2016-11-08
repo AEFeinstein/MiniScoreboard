@@ -44,7 +44,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".MiniScoreboardPreferenceActivity"
@@ -60,8 +61,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
         <receiver
             android:name=".MiniScoreboardAlarm"
-            android:enabled="true">
-        </receiver>
+            android:enabled="true" />
 
     </application>
 

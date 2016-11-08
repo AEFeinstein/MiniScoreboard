@@ -31,7 +31,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/padding_view"
         android:layout_width="16dp"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <!-- A CardView that contains a TextView -->
     <android.support.v7.widget.CardView

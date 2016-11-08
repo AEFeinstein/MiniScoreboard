@@ -15,7 +15,7 @@ public class DailyEntryHolder extends ParentViewHolder {
     public DailyEntryHolder(View itemView) {
         super(itemView);
         mView = itemView;
-        ((TextView)mView.findViewById(R.id.statistics_card_puzzle_time_text)).setText("");
+        ((TextView) mView.findViewById(R.id.statistics_card_puzzle_time_text)).setText("");
     }
 
     /**
