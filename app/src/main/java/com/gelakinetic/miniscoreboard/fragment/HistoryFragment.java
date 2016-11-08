@@ -149,6 +149,11 @@ public class HistoryFragment extends MiniScoreboardFragment {
                         mAdapter.notifyChildItemInserted(newIndex, mDailyEntries.get(newIndex).mScores.size() - 1);
                     }
                 } else {
+                    if (newIndex > oldIndex) {
+                        /* If the new index is after the old index, shift it back one because the
+                         * old item is removed first */
+                        newIndex--;
+                    }
                     /* The entry moved, remove it first from the old index*/
                     mDailyEntries.remove(oldIndex);
                     mAdapter.notifyParentItemRemoved(oldIndex);

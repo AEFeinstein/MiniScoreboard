@@ -105,6 +105,11 @@ public class DailyFragment extends MiniScoreboardFragment {
                     /* The entry didn't move, it just changed */
                     mRecyclerView.getAdapter().notifyItemChanged(oldIndex);
                 } else {
+                    if (newIndex > oldIndex) {
+                        /* If the new index is after the old index, shift it back one because the
+                         * old item is removed first */
+                        newIndex--;
+                    }
                     /* The entry moved, remove it first from the old index*/
                     mDailyEntries.remove(oldIndex);
                     mRecyclerView.getAdapter().notifyItemRemoved(oldIndex);
