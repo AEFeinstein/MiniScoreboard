@@ -147,8 +147,15 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_summary))
                 .setContentIntent(playCrosswordIntent)
-                .addAction(new NotificationCompat.Action.Builder(0, context.getString(R.string.action_play_crossword), playCrosswordIntent).build())
-                .addAction(new NotificationCompat.Action.Builder(0, context.getString(R.string.action_submit_score), submitScoreIntent).build());
+                .addAction(new NotificationCompat.Action.Builder(
+                        R.drawable.ic_puzzle_white_32dp,
+                        context.getString(R.string.action_play_crossword),
+                        playCrosswordIntent)
+                        .build())
+                .addAction(new NotificationCompat.Action.Builder(
+                        R.drawable.ic_file_upload_white_32dp,
+                        context.getString(R.string.action_submit_score),
+                        submitScoreIntent).build());
 
         SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
 
