@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.renderer.AxisRenderer;
@@ -40,7 +39,6 @@ import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -303,18 +301,10 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Get a reference to the bar chart */
         mBarChartView = (BarChartView) view.findViewById(R.id.barchart);
 
-        /* Format the chart */
-        mBarChartView.setBarSpacing(Tools.fromDpToPx(40));
-        mBarChartView.setXAxis(true)
-                .setYAxis(true)
-                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
-                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
-                .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
-                .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
-
         this.setHasOptionsMenu(true);
 
-        setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        setUser("dRB5WRIC5she5P8QYar3CTtckwj2");
 
         return view;
     }
@@ -486,9 +476,6 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Reset the chart data */
         mBarChartView.getData().clear();
 
-        /* Format a little, because it's displayed in such a tight spot */
-        mBarChartView.setBarSpacing(0);
-
         /* Set the vertical step on the chart to display 5 marks */
         mBarChartView.setStep((int) Math.ceil(maxValue / MAX_NUM_Y_LABELS));
 
@@ -553,5 +540,19 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Write the username at the top */
         mUsernameTextView.setText(((MainActivity) getActivity()).getUserNameFromUid(mUid));
+
+        /* Reset the bar chart view */
+        mBarChartView.reset();
+
+        /* Format the chart */
+        mBarChartView.setXAxis(true)
+                .setYAxis(true)
+                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
+                .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        /* Format a little, because it's displayed in such a tight spot */
+        mBarChartView.setBarSpacing(0);
     }
 }
