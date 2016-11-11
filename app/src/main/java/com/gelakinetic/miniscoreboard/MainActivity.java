@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             };
 
     /* A hash map of user names, because there is no join */
-    private HashMap<String, String> mUsernameHashMap = new HashMap<>();
+    public HashMap<String, String> mUsernameHashMap = new HashMap<>();
     private DatabaseReference mUsernameDatabaseReference;
     private ChildEventListener mUsernameEventListener = new ChildEventListener() {
         /**

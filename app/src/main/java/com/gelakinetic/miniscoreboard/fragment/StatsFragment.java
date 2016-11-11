@@ -23,6 +23,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -57,6 +60,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     private TextView mMeanTextView;
     private TextView mStddevTextView;
     private TextView mWinsTextView;
+    private TextView mUsernameTextView;
 
     private static final float MAX_NUM_BINS = 30;
     private static final float MAX_NUM_X_LABELS = 15;
@@ -287,26 +291,9 @@ public class StatsFragment extends MiniScoreboardFragment {
             }
         });
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        /* Get this daily data, and order it by date */
         mStatsScoresDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mStatsScoresDatabaseReference
-                .child("personalScores")
-                .child(uid)
-                .orderByKey()
-                .addChildEventListener(mStatsScoresChildEventListener);
 
-        mStatsScoresDatabaseReference
-                .child("dailyWinners")
-                .orderByValue()
-                .startAt(uid)
-                .endAt(uid)
-                .addChildEventListener(mWinnersChildEventListener);
-
-        /* Write the username at the top */
-        String username = ((MainActivity) getActivity()).getUserNameFromUid(uid);
-        ((TextView) view.findViewById(R.id.user_name_text_view)).setText(username);
+        mUsernameTextView = ((TextView) view.findViewById(R.id.user_name_text_view));
 
         /* Get references to the statistics text views */
         mMeanTextView = (TextView) view.findViewById(R.id.mean_text_view);
@@ -318,13 +305,16 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Format the chart */
         mBarChartView.setBarSpacing(Tools.fromDpToPx(40));
-        mBarChartView.setRoundCorners(Tools.fromDpToPx(2));
         mBarChartView.setXAxis(true)
                 .setYAxis(true)
                 .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
                 .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
                 .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
                 .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        this.setHasOptionsMenu(true);
+
+        setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         return view;
     }
@@ -501,5 +491,55 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Show the data */
         mBarChartView.show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.stats_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Handle item selection */
+        switch (item.getItemId()) {
+            case R.id.menu_change_user:
+                AllUsersDialogFragment newFragment = new AllUsersDialogFragment();
+                newFragment.show(getFragmentManager(), MainActivity.DIALOG_TAG);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * TODO document
+     *
+     * @param mUid
+     */
+    public void setUser(String mUid) {
+        /* Remove old listeners */
+        mStatsScoresDatabaseReference.removeEventListener(mStatsScoresChildEventListener);
+        mStatsScoresDatabaseReference.removeEventListener(mWinnersChildEventListener);
+
+        /* Clear local data */
+        mRecyclerView.getAdapter().notifyItemRangeRemoved(0, mStatisticsEntries.size());
+        mStatisticsEntries.clear();
+
+        /* Get this daily data, and order it by date */
+        mStatsScoresDatabaseReference
+                .child("personalScores")
+                .child(mUid)
+                .orderByKey()
+                .addChildEventListener(mStatsScoresChildEventListener);
+
+        mStatsScoresDatabaseReference
+                .child("dailyWinners")
+                .orderByValue()
+                .startAt(mUid)
+                .endAt(mUid)
+                .addChildEventListener(mWinnersChildEventListener);
+
+        /* Write the username at the top */
+        mUsernameTextView.setText(((MainActivity) getActivity()).getUserNameFromUid(mUid));
     }
 }

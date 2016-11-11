@@ -55,6 +55,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="action_play_crossword">Play Crossword</string>
     <string name="action_submit_score">Submit Score</string>
 
+    <string name="change_user_title">Pick a User</string>
+
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>
 
