@@ -359,6 +359,9 @@ public class StatsFragment extends MiniScoreboardFragment {
      * @return The mean of all times in the ArrayList of entries
      */
     static double getMean(ArrayList<DatabaseScoreEntry> entries) {
+        if (entries.size() == 0) {
+            return 0;
+        }
         double sum = 0.0;
         for (DatabaseScoreEntry entry : entries) {
             sum += entry.mPuzzleTime;
@@ -373,7 +376,9 @@ public class StatsFragment extends MiniScoreboardFragment {
      * @return The standard deviation of all times in the ArrayList of entries
      */
     static double getStdDev(ArrayList<DatabaseScoreEntry> entries) {
-
+        if (entries.size() == 0) {
+            return 0;
+        }
         double mean = getMean(entries);
         double temp = 0;
         for (DatabaseScoreEntry entry : entries) {
@@ -400,6 +405,9 @@ public class StatsFragment extends MiniScoreboardFragment {
      * Update the bar chart with the latest data
      */
     private void updateBarChart(ArrayList<DatabaseScoreEntry> entries) {
+        if (entries.size() == 0) {
+            return;
+        }
 
         HashMap<Integer, BarSet> mBarsHashMap = new HashMap<>();
 
@@ -524,6 +532,10 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Clear local data */
         mRecyclerView.getAdapter().notifyItemRangeRemoved(0, mStatisticsEntries.size());
         mStatisticsEntries.clear();
+        updateStatistics();
+
+        mWins = 0;
+        mWinsTextView.setText(String.format(getString(R.string.wins_label), mWins));
 
         /* Get this daily data, and order it by date */
         mStatsScoresDatabaseReference
