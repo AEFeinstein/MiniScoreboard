@@ -27,6 +27,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.gelakinetic.miniscoreboard.R;
 
@@ -52,11 +57,19 @@ public class AboutDialogFragment extends DialogFragment {
             /* Eat it */
         }
 
+        /* Set the custom view, with some images below the text */
+        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+        assert dialogLayout != null;
+        TextView text = (TextView) dialogLayout.findViewById(R.id.about_text_view);
+        text.setText(Html.fromHtml(getString(R.string.about_message)));
+        text.setMovementMethod(LinkMovementMethod.getInstance());
+
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
                 .setCancelable(true)
                 .setTitle(getString(R.string.app_name) + " " + versionName)
-                .setMessage(R.string.about_message)
+                .setView(dialogLayout)
                 .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
