@@ -19,6 +19,7 @@
 
 package com.gelakinetic.miniscoreboard;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,5 +58,20 @@ public class ScoreEntryHolder extends ChildViewHolder {
     public void setPuzzleTimeText(String text) {
         TextView field = (TextView) mView.findViewById(R.id.statistics_card_puzzle_time_text);
         field.setText(text);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param bold
+     */
+    public void setBold(boolean bold) {
+        if (bold) {
+            ((TextView) mView.findViewById(R.id.statistics_card_date_text)).setTypeface(null, Typeface.BOLD);
+            ((TextView) mView.findViewById(R.id.statistics_card_puzzle_time_text)).setTypeface(null, Typeface.BOLD);
+        } else {
+            ((TextView) mView.findViewById(R.id.statistics_card_date_text)).setTypeface(null, Typeface.NORMAL);
+            ((TextView) mView.findViewById(R.id.statistics_card_puzzle_time_text)).setTypeface(null, Typeface.NORMAL);
+        }
     }
 }

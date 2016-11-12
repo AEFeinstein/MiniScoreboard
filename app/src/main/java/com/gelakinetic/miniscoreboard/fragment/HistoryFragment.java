@@ -34,6 +34,7 @@ import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -279,6 +280,11 @@ public class HistoryFragment extends MiniScoreboardFragment {
             @Override
             public void onBindChildViewHolder(ScoreEntryHolder childViewHolder, int position,
                                               Object childListItem) {
+                if (((DatabaseScoreEntry) childListItem).mUid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    childViewHolder.setBold(true);
+                } else {
+                    childViewHolder.setBold(false);
+                }
                 childViewHolder.setTitleText(((DatabaseScoreEntry) childListItem).mUsername);
                 childViewHolder.setPuzzleTimeText(((DatabaseScoreEntry) childListItem).getPuzzleTime());
             }
