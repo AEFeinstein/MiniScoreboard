@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.gelakinetic.miniscoreboard.fragment.AboutDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
@@ -334,6 +335,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent in = new Intent();
                 in.setClass(MainActivity.this, MiniScoreboardPreferenceActivity.class);
                 startActivityForResult(in, REQ_CODE_SETTINGS);
+                return true;
+            case R.id.menu_about:
+                AboutDialogFragment newFragment = new AboutDialogFragment();
+                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

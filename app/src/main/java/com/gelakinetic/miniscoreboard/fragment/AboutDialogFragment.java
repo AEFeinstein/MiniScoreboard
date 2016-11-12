@@ -21,22 +21,16 @@ package com.gelakinetic.miniscoreboard.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
-import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-public class AllUsersDialogFragment extends DialogFragment {
-
-    String[] mUsernames = null;
-    String[] mUids = null;
+public class AboutDialogFragment extends DialogFragment {
 
     /**
      * This is overridden to display a dialog built with AlertDialog.Builder.
@@ -50,38 +44,24 @@ public class AllUsersDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
-        /* Get all the usernames and UIDs, move them from a HashMap to an ArrayList for sorting */
-        ArrayList<UsernameUidPair> users = new ArrayList<>();
-        MainActivity activity = (MainActivity) getActivity();
-        for (String uid : activity.mUsernameHashMap.keySet()) {
-            users.add(new UsernameUidPair(uid, activity.mUsernameHashMap.get(uid)));
-        }
-        Collections.sort(users);
-
-        /* Copy the usernames and UIDs to regular arrays */
-        mUsernames = new String[users.size()];
-        mUids = new String[users.size()];
-        for (int i = 0; i < users.size(); i++) {
-            mUsernames[i] = users.get(i).mUsername;
-            mUids[i] = users.get(i).mUid;
+        String versionName = "";
+        try {
+            PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            versionName = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            /* Eat it */
         }
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
                 .setCancelable(true)
-                .setItems(mUsernames, new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.app_name) + " " + versionName)
+                .setMessage(R.string.about_message)
+                .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        /* Find the one StatsFragment, tell it to switch the user */
-                        for(Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
-                            if(fragment instanceof StatsFragment) {
-                                ((StatsFragment)fragment).setUser(mUids[i]);
-                                return;
-                            }
-                        }
                     }
                 })
-                .setTitle(R.string.change_user_title)
                 .show();
     }
 
