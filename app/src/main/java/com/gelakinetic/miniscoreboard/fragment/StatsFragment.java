@@ -62,7 +62,7 @@ public class StatsFragment extends MiniScoreboardFragment {
     private TextView mUsernameTextView;
 
     private static final float MAX_NUM_BINS = 30;
-    private static final float MAX_NUM_X_LABELS = 15;
+    private static final float MAX_NUM_X_LABELS = 10;
     private static final float MAX_NUM_Y_LABELS = 5;
     private BarChartView mBarChartView;
 
@@ -343,9 +343,9 @@ public class StatsFragment extends MiniScoreboardFragment {
     private void updateStatistics() {
         if (isAdded() && mMeanTextView != null) {
             mMeanTextView.setText(String.format(getString(R.string.mean_label),
-                    formatTime(getMean(mStatisticsEntries))));
+                    formatTime(getMean(mStatisticsEntries), true)));
             mStddevTextView.setText(String.format(getString(R.string.stddev_label),
-                    formatTime(getStdDev(mStatisticsEntries))));
+                    formatTime(getStdDev(mStatisticsEntries), true)));
             updateBarChart(mStatisticsEntries);
         }
     }
@@ -389,14 +389,21 @@ public class StatsFragment extends MiniScoreboardFragment {
     /**
      * Given a time in seconds, format it nicely like 0:00.00
      *
-     * @param seconds The time in seconds
+     * @param seconds   The time in seconds
+     * @param hundreths Whether or not the hundreths of a second should be displayed
      * @return A string with the formatted time
      */
-    private static String formatTime(double seconds) {
-        return String.format("%01d:%02d.%02d",
-                ((int) seconds) / 60,
-                ((int) seconds) % 60,
-                (int) ((seconds - ((int) seconds)) * 100));
+    private static String formatTime(double seconds, boolean hundreths) {
+        if (hundreths) {
+            return String.format("%01d:%02d.%02d",
+                    ((int) seconds) / 60,
+                    ((int) seconds) % 60,
+                    (int) ((seconds - ((int) seconds)) * 100));
+        } else {
+            return String.format("%01d:%02d",
+                    ((int) seconds) / 60,
+                    ((int) seconds) % 60);
+        }
     }
 
     /**
@@ -434,7 +441,7 @@ public class StatsFragment extends MiniScoreboardFragment {
                 for (int i = 0; i < MAX_NUM_BINS; i++) {
                     if (labelMod == 0 || i % labelMod == 0) {
                         /* Label */
-                        newBarSet.addBar(String.format("%d", (i + 1) * binSize), 0);
+                        newBarSet.addBar(formatTime((i + 1) * binSize, false), 0);
                     } else {
                         /* No Label */
                         newBarSet.addBar("", 0);
