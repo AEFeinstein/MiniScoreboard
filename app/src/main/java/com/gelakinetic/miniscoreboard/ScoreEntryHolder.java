@@ -28,7 +28,7 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 public class ScoreEntryHolder extends ChildViewHolder {
 
     /* The view for this card */
-    View mView;
+    private final View mView;
 
     /**
      * Constructor

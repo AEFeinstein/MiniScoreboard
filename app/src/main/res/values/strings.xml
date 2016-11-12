@@ -26,7 +26,6 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="unknown_sign_in_response">Unknown response from AuthUI sign-in</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="unknown_response">Unexpected onActivityResult response code</string>
-    <string name="configuration_required">Configuration is required - see README.md</string>
     <string name="sign_out_failed">Sign Out Failed</string>
 
     <string name="stats_fragment_title">Statistics</string>
@@ -60,7 +59,6 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="five_by_five">5x5 Puzzle</string>
     <string name="seven_by_seven">7x7 Puzzle</string>
     <string name="score_input_title">Submit Your Score</string>
-    <string name="score_submitted">Score Submitted!</string>
 
     <string name="user_created">User Created!</string>
     <string name="username_input_title">Pick a Username</string>

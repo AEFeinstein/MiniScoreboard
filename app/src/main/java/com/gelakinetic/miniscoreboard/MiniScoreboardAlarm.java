@@ -46,7 +46,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      * @param context The Context to build the intent with
      * @return A PendingIntent to either set or clear
      */
-    public static PendingIntent getPendingIntent(Context context) {
+    private static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, MiniScoreboardAlarm.class);
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
@@ -129,7 +129,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to build the notification with
      */
-    static void showNotification(Context context) {
+    private static void showNotification(Context context) {
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
         notificationIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));

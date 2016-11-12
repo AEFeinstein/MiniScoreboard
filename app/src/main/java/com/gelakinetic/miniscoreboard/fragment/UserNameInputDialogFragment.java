@@ -36,7 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserNameInputDialogFragment extends DialogFragment {
 
-    EditText mEditText;
+    private EditText mEditText;
 
     /**
      * This is overridden to display a custom dialog, built with AlertDialog.Builder.
@@ -74,7 +74,7 @@ public class UserNameInputDialogFragment extends DialogFragment {
      *
      * @param username A String username for this user
      */
-    public void createNewUserName(String username) {
+    private void createNewUserName(String username) {
 
         /* Get a database reference */
         FirebaseDatabase.getInstance().getReference()

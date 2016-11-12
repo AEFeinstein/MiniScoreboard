@@ -49,10 +49,10 @@ import java.util.Locale;
 
 public class DailyFragment extends MiniScoreboardFragment {
 
-    private ArrayList<DatabaseScoreEntry> mDailyEntries = new ArrayList<>();
+    private final ArrayList<DatabaseScoreEntry> mDailyEntries = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Query mDailyScoreDatabaseReference;
-    private ChildEventListener mDailyScoreChildEventListener = new ChildEventListener() {
+    private final ChildEventListener mDailyScoreChildEventListener = new ChildEventListener() {
         /**
          * Called when a child is added to the database. The key for this value is the user's uid
          * @param dataSnapshot The child added, a DatabaseScoreEntry
@@ -243,9 +243,6 @@ public class DailyFragment extends MiniScoreboardFragment {
              */
             @Override
             public int getItemCount() {
-                if (null == mDailyEntries) {
-                    return 0;
-                }
                 return mDailyEntries.size();
             }
         });
@@ -270,8 +267,6 @@ public class DailyFragment extends MiniScoreboardFragment {
                 startActivity(crosswordIntent);
             }
         });
-
-        /* TODO show this user's entry separately? */
 
         return view;
     }

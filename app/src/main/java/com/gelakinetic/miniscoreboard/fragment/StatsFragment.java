@@ -68,10 +68,10 @@ public class StatsFragment extends MiniScoreboardFragment {
 
     private int mWins = 0;
 
-    private ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
+    private final ArrayList<DatabaseScoreEntry> mStatisticsEntries = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private DatabaseReference mStatsScoresDatabaseReference;
-    private ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
+    private final ChildEventListener mStatsScoresChildEventListener = new ChildEventListener() {
         /**
          * Called when a child is added to the database. The key for this value is the date
          * @param dataSnapshot The child added, a DatabaseScoreEntry
@@ -182,7 +182,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             /* TODO some error handling */
         }
     };
-    private ChildEventListener mWinnersChildEventListener = new ChildEventListener() {
+    private final ChildEventListener mWinnersChildEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String key) {
             if (key != null) {
@@ -283,9 +283,6 @@ public class StatsFragment extends MiniScoreboardFragment {
              */
             @Override
             public int getItemCount() {
-                if (null == mStatisticsEntries) {
-                    return 0;
-                }
                 return mStatisticsEntries.size();
             }
         });
@@ -359,7 +356,7 @@ public class StatsFragment extends MiniScoreboardFragment {
      * @param entries A collection of database entries with puzzle times
      * @return The mean of all times in the ArrayList of entries
      */
-    static double getMean(ArrayList<DatabaseScoreEntry> entries) {
+    private static double getMean(ArrayList<DatabaseScoreEntry> entries) {
         if (entries.size() == 0) {
             return 0;
         }
@@ -376,7 +373,7 @@ public class StatsFragment extends MiniScoreboardFragment {
      * @param entries A collection of database entries with puzzle times
      * @return The standard deviation of all times in the ArrayList of entries
      */
-    static double getStdDev(ArrayList<DatabaseScoreEntry> entries) {
+    private static double getStdDev(ArrayList<DatabaseScoreEntry> entries) {
         if (entries.size() == 0) {
             return 0;
         }
@@ -395,7 +392,7 @@ public class StatsFragment extends MiniScoreboardFragment {
      * @param seconds The time in seconds
      * @return A string with the formatted time
      */
-    static String formatTime(double seconds) {
+    private static String formatTime(double seconds) {
         return String.format("%01d:%02d.%02d",
                 ((int) seconds) / 60,
                 ((int) seconds) % 60,

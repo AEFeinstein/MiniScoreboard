@@ -47,12 +47,12 @@ import java.util.Collections;
 public class HistoryFragment extends MiniScoreboardFragment {
 
     /* Backing array list & adapter to store and display data */
-    private ArrayList<DatabaseDailyEntry> mDailyEntries = new ArrayList<>();
+    private final ArrayList<DatabaseDailyEntry> mDailyEntries = new ArrayList<>();
     private ExpandableRecyclerAdapter<DailyEntryHolder, ScoreEntryHolder> mAdapter;
 
     /* Database reference and the listener for events */
     private Query mHistoryScoresDatabaseReference;
-    private ChildEventListener mHistoryScoresChildEventListener = new ChildEventListener() {
+    private final ChildEventListener mHistoryScoresChildEventListener = new ChildEventListener() {
         /**
          * Called when a child is added to the database.
          *

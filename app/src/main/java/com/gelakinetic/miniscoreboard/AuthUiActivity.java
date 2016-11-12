@@ -31,11 +31,9 @@ import android.view.View;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Collections;
+
 public class AuthUiActivity extends Activity {
-
-    private static final String UNCHANGED_CONFIG_VALUE = "CHANGE-ME";
-
-    private static final String GOOGLE_TOS_URL = "https://www.google.com/policies/terms/";
 
     private static final int RC_SIGN_IN = 100;
 
@@ -72,22 +70,18 @@ public class AuthUiActivity extends Activity {
         setContentView(R.layout.activity_auth_ui);
         mRootView = findViewById(android.R.id.content);
 
-        if (!isGoogleConfigured()) {
-            showSnackbar(R.string.configuration_required);
+        if (auth.getCurrentUser() != null) {
+            startActivity(MainActivity.createIntent(this));
+            finish();
         } else {
-            if (auth.getCurrentUser() != null) {
-                startActivity(MainActivity.createIntent(this));
-                finish();
-            } else {
-                startActivityForResult(
-                        AuthUI.getInstance().createSignInIntentBuilder()
-                                .setTheme(R.style.AppTheme)
-                                .setLogo(R.mipmap.ic_launcher)
-                                .setProviders(AuthUI.GOOGLE_PROVIDER)
-                                .setTosUrl(GOOGLE_TOS_URL)
-                                .build(),
-                        RC_SIGN_IN);
-            }
+            startActivityForResult(
+                    AuthUI.getInstance().createSignInIntentBuilder()
+                            .setTheme(R.style.AppTheme)
+                            .setLogo(R.mipmap.ic_launcher)
+                            .setProviders(Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            /*.setTosUrl(GOOGLE_TOS_URL) TODO add a TOS? */
+                            .build(),
+                    RC_SIGN_IN);
         }
     }
 
@@ -117,17 +111,6 @@ public class AuthUiActivity extends Activity {
             return;
         }
         showSnackbar(R.string.unknown_response);
-    }
-
-    /**
-     * Check if Google auth is configured
-     *
-     * @return true if Google auth is configured, false otherwise
-     */
-    @MainThread
-    private boolean isGoogleConfigured() {
-        return !UNCHANGED_CONFIG_VALUE.equals(
-                getResources().getString(R.string.default_web_client_id));
     }
 
     /**

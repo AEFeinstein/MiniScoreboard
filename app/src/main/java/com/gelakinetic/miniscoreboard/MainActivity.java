@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener mListener =
+    private final SharedPreferences.OnSharedPreferenceChangeListener mListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 /**
                  * Called when a preference changes
@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
             };
 
     /* A hash map of user names, because there is no join */
-    public HashMap<String, String> mUsernameHashMap = new HashMap<>();
+    public final HashMap<String, String> mUsernameHashMap = new HashMap<>();
     private DatabaseReference mUsernameDatabaseReference;
-    private ChildEventListener mUsernameEventListener = new ChildEventListener() {
+    private final ChildEventListener mUsernameEventListener = new ChildEventListener() {
         /**
          * Called when a child is added to the database. The key for this value is the uid
          * @param dataSnapshot The child added, a String
@@ -600,7 +600,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param shouldShow true to show the progress bar, false to hide it
      */
-    public void showIndeterminateProgressBar(boolean shouldShow) {
+    private void showIndeterminateProgressBar(boolean shouldShow) {
         if (shouldShow) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {

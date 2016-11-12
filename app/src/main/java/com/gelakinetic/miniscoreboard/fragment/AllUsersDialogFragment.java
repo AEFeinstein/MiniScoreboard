@@ -35,8 +35,7 @@ import java.util.Collections;
 
 public class AllUsersDialogFragment extends DialogFragment {
 
-    String[] mUsernames = null;
-    String[] mUids = null;
+    private String[] mUids = null;
 
     /**
      * This is overridden to display a dialog built with AlertDialog.Builder.
@@ -59,17 +58,17 @@ public class AllUsersDialogFragment extends DialogFragment {
         Collections.sort(users);
 
         /* Copy the usernames and UIDs to regular arrays */
-        mUsernames = new String[users.size()];
+        String[] usernames = new String[users.size()];
         mUids = new String[users.size()];
         for (int i = 0; i < users.size(); i++) {
-            mUsernames[i] = users.get(i).mUsername;
+            usernames[i] = users.get(i).mUsername;
             mUids[i] = users.get(i).mUid;
         }
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
                 .setCancelable(true)
-                .setItems(mUsernames, new DialogInterface.OnClickListener() {
+                .setItems(usernames, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         /* Find the one StatsFragment, tell it to switch the user */
@@ -86,8 +85,8 @@ public class AllUsersDialogFragment extends DialogFragment {
     }
 
     private class UsernameUidPair implements Comparable<UsernameUidPair> {
-        String mUsername;
-        String mUid;
+        final String mUsername;
+        final String mUid;
 
         /**
          * TODO document

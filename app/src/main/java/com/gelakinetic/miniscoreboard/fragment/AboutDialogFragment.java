@@ -77,31 +77,4 @@ public class AboutDialogFragment extends DialogFragment {
                 })
                 .show();
     }
-
-    private class UsernameUidPair implements Comparable<UsernameUidPair> {
-        String mUsername;
-        String mUid;
-
-        /**
-         * TODO document
-         *
-         * @param uid
-         * @param username
-         */
-        UsernameUidPair(String uid, String username) {
-            mUid = uid;
-            mUsername = username;
-        }
-
-        /**
-         * TODO document
-         *
-         * @param other
-         * @return
-         */
-        @Override
-        public int compareTo(@NonNull UsernameUidPair other) {
-            return this.mUsername.compareTo(other.mUsername);
-        }
-    }
 }
