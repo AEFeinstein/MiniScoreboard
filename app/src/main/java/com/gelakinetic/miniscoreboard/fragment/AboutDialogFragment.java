@@ -57,7 +57,7 @@ public class AboutDialogFragment extends DialogFragment {
                 .setCancelable(true)
                 .setTitle(getString(R.string.app_name) + " " + versionName)
                 .setMessage(R.string.about_message)
-                .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener(){
+                .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }

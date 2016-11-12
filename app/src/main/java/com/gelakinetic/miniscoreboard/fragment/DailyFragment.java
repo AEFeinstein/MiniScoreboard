@@ -288,4 +288,9 @@ public class DailyFragment extends MiniScoreboardFragment {
     public boolean shouldShowFab() {
         return true;
     }
+
+    @Override
+    public boolean shouldShowChangeUsersButton() {
+        return false;
+    }
 }

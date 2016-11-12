@@ -23,9 +23,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -313,8 +310,6 @@ public class StatsFragment extends MiniScoreboardFragment {
                 .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
                 .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        this.setHasOptionsMenu(true);
-
         setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         return view;
@@ -338,6 +333,11 @@ public class StatsFragment extends MiniScoreboardFragment {
     @Override
     public boolean shouldShowFab() {
         return false;
+    }
+
+    @Override
+    public boolean shouldShowChangeUsersButton() {
+        return true;
     }
 
     /**
@@ -519,24 +519,6 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Show the data */
         mBarChartView.show();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.stats_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.menu_change_user:
-                AllUsersDialogFragment newFragment = new AllUsersDialogFragment();
-                newFragment.show(getFragmentManager(), MainActivity.DIALOG_TAG);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**

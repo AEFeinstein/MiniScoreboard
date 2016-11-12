@@ -73,9 +73,9 @@ public class AllUsersDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         /* Find the one StatsFragment, tell it to switch the user */
-                        for(Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
-                            if(fragment instanceof StatsFragment) {
-                                ((StatsFragment)fragment).setUser(mUids[i]);
+                        for (Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
+                            if (fragment instanceof StatsFragment) {
+                                ((StatsFragment) fragment).setUser(mUids[i]);
                                 return;
                             }
                         }

@@ -23,4 +23,6 @@ import android.support.v4.app.Fragment;
 
 public abstract class MiniScoreboardFragment extends Fragment {
     public abstract boolean shouldShowFab();
+
+    public abstract boolean shouldShowChangeUsersButton();
 }

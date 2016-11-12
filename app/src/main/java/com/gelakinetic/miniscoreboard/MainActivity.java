@@ -39,6 +39,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.gelakinetic.miniscoreboard.fragment.AboutDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.AllUsersDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter mViewPagerAdapter;
     private ViewPager mViewPager;
     private ProgressBar mProgressBar;
+    private MenuItem mChangeUserMenuItem;
 
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
@@ -317,6 +319,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        mChangeUserMenuItem = menu.findItem(R.id.menu_change_user);
+
         return true;
     }
 
@@ -331,15 +336,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
         switch (item.getItemId()) {
-            case R.id.menu_settings:
+            case R.id.menu_settings: {
                 Intent in = new Intent();
                 in.setClass(MainActivity.this, MiniScoreboardPreferenceActivity.class);
                 startActivityForResult(in, REQ_CODE_SETTINGS);
                 return true;
-            case R.id.menu_about:
+            }
+            case R.id.menu_about: {
                 AboutDialogFragment newFragment = new AboutDialogFragment();
                 newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
                 return true;
+            }
+            case R.id.menu_change_user: {
+                AllUsersDialogFragment newFragment = new AllUsersDialogFragment();
+                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -444,8 +456,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mFab.hide();
         }
-    }
 
+        if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton() &&
+                !mChangeUserMenuItem.isVisible()) {
+            /* Show it */
+            mChangeUserMenuItem.setVisible(true);
+        } else if (mChangeUserMenuItem.isVisible()) {
+            /* Hide it */
+            mChangeUserMenuItem.setVisible(false);
+        }
+    }
 
     /**
      * Show a little message on the Snackbar

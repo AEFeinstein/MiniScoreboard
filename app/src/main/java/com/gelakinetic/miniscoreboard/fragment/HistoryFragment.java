@@ -315,4 +315,9 @@ public class HistoryFragment extends MiniScoreboardFragment {
         return false;
     }
 
+    @Override
+    public boolean shouldShowChangeUsersButton() {
+        return false;
+    }
+
 }
