@@ -41,6 +41,7 @@ import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -304,10 +305,17 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Get a reference to the bar chart */
         mBarChartView = (BarChartView) view.findViewById(R.id.barchart);
 
+        /* Format the chart */
+        mBarChartView.setXAxis(true)
+                .setYAxis(true)
+                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
+                .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
+
         this.setHasOptionsMenu(true);
 
-//        setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        setUser("dRB5WRIC5she5P8QYar3CTtckwj2");
+        setUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         return view;
     }
@@ -490,10 +498,14 @@ public class StatsFragment extends MiniScoreboardFragment {
             int step = (int) Math.ceil(maxValue / MAX_NUM_Y_LABELS);
             mBarChartView.setStep(step);
 
+            while (maxValue % step != 0) {
+                maxValue++;
+            }
+
             /* Manually set the boarder values in the renderer. For whatever reason, this
-             * does not get automaticlly recalculated when new data is swapped into the chart
+             * does not get automatically recalculated when new data is swapped into the chart
              */
-            yRndr.setBorderValues(0, (int) (step * MAX_NUM_Y_LABELS));
+            yRndr.setBorderValues(0, (int) maxValue);
         } catch (NoSuchFieldException e) {
             /* Eat it */
         } catch (IllegalAccessException e) {
@@ -564,16 +576,5 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Reset the bar chart view */
         mBarChartView.reset();
-
-        /* Format the chart */
-        mBarChartView.setXAxis(true)
-                .setYAxis(true)
-                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
-                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
-                .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
-                .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        /* Format a little, because it's displayed in such a tight spot */
-        mBarChartView.setBarSpacing(0);
     }
 }

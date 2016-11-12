@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
             }
         });
+        mFab.hide();
 
         /* Set up the ViewPager, don't load fragments until the username hashmap is received */
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
