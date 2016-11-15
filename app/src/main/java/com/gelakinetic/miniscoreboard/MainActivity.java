@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private MenuItem mChangeUserMenuItem;
 
+    private boolean mWasLaunchedFromNotification = false;
+
     /* Shared Preferences */
     private SharedPreferences mSharedPreferences;
 
@@ -219,6 +221,14 @@ public class MainActivity extends AppCompatActivity {
 
                         /* Hide the progress bar */
                         showIndeterminateProgressBar(false);
+
+                        /* If the app was launched from the notification, now is the time to
+                         * click the fab
+                         */
+                        if (mWasLaunchedFromNotification) {
+                            mFab.callOnClick();
+                            mWasLaunchedFromNotification = false;
+                        }
                     }
 
                     /**
@@ -270,12 +280,15 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
 
-        /* If this was launched from the notification to submit a score, "click" the fab */
+        /* If this was launched from the notification to submit a score,
+         * raise a flag to "click" the fab
+         */
         if (getIntent().getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
             /* Clear any pending notifications */
             MiniScoreboardAlarm.clearNotification(this);
 
-            mFab.callOnClick();
+            /* The fab will be clicked after usernames have been loaded */
+            mWasLaunchedFromNotification = true;
         }
 
         //checkForOldWinners();
@@ -293,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent.getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
             /* Clear any pending notifications */
             MiniScoreboardAlarm.clearNotification(this);
-
+            mWasLaunchedFromNotification = false;
             mFab.callOnClick();
         }
     }
