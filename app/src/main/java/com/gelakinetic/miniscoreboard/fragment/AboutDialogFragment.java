@@ -67,7 +67,6 @@ public class AboutDialogFragment extends DialogFragment {
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
-                .setCancelable(true)
                 .setTitle(getString(R.string.app_name) + " " + versionName)
                 .setView(dialogLayout)
                 .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener() {

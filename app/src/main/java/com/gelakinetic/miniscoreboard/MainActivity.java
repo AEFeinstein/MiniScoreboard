@@ -457,13 +457,15 @@ public class MainActivity extends AppCompatActivity {
             mFab.hide();
         }
 
-        if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton() &&
-                !mChangeUserMenuItem.isVisible()) {
-            /* Show it */
-            mChangeUserMenuItem.setVisible(true);
-        } else if (mChangeUserMenuItem.isVisible()) {
-            /* Hide it */
-            mChangeUserMenuItem.setVisible(false);
+        if (mChangeUserMenuItem != null) {
+            if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton() &&
+                    !mChangeUserMenuItem.isVisible()) {
+                /* Show it */
+                mChangeUserMenuItem.setVisible(true);
+            } else if (mChangeUserMenuItem.isVisible()) {
+                /* Hide it */
+                mChangeUserMenuItem.setVisible(false);
+            }
         }
     }
 

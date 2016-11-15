@@ -110,7 +110,6 @@ public class ScoreInputDialogFragment extends DialogFragment
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
-                .setCancelable(true)
                 .setView(customView)
                 .setTitle(R.string.score_input_title)
                 .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {

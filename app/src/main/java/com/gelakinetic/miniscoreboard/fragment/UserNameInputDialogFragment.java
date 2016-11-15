@@ -25,7 +25,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.gelakinetic.miniscoreboard.MainActivity;
@@ -37,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class UserNameInputDialogFragment extends DialogFragment {
 
     private EditText mEditText;
+    private Button mPositiveButton;
 
     /**
      * This is overridden to display a custom dialog, built with AlertDialog.Builder.
@@ -55,18 +59,48 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .inflate(R.layout.dialog_username_input, null);
 
         mEditText = (EditText) customView.findViewById(R.id.user_name_edit_text);
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                /* Don't care */
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                /* Don't care */
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() > 0) {
+                    mPositiveButton.setEnabled(true);
+                } else {
+                    mPositiveButton.setEnabled(false);
+                }
+            }
+        });
         /* Display the dialog */
-        return new AlertDialog.Builder(getContext())
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setCancelable(false)
                 .setView(customView)
                 .setTitle(R.string.username_input_title)
                 .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        createNewUserName(mEditText.getText().toString());
+                        createNewUserName(mEditText.getText().toString().trim());
                     }
                 })
                 .show();
+
+        /* Set it on the fragment, not the dialog! */
+        this.setCancelable(false);
+
+        /* Grab a reference to the button in order to enable & disable it */
+        mPositiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        mPositiveButton.setEnabled(false);
+
+        /* Return the dialog */
+        return alertDialog;
     }
 
     /**

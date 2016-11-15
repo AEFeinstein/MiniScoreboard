@@ -67,7 +67,6 @@ public class AllUsersDialogFragment extends DialogFragment {
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
-                .setCancelable(true)
                 .setItems(usernames, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
