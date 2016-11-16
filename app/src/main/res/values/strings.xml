@@ -86,9 +86,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <string name="username_changed">Username Changed</string>
 
     <!-- DeleteAccountDialogFragment -->
-    <string name="delete_account_dialog_message">Are you sure you want to delete this account? All your data will be gone forever.</string>
+    <string name="delete_account_dialog_message">Are you sure you want to delete this account? All your data will be gone forever!</string>
     <string name="delete_account_dialog_negative">No</string>
-    <string name="delete_account_dialog_positive">Yes, nuke it!</string>
+    <string name="delete_account_dialog_positive">Yes, nuke it</string>
     <string name="delete_account_failed">Delete Account Failed</string>
 
     <!-- Settings Strings -->

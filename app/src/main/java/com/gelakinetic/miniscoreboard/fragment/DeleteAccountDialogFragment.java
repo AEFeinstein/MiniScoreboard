@@ -100,6 +100,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
+                .setTitle(R.string.pref_delete_acct_title)
                 .setMessage(R.string.delete_account_dialog_message)
                 .setPositiveButton(R.string.delete_account_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
