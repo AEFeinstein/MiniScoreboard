@@ -44,6 +44,8 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
+
 public class HistoryFragment extends MiniScoreboardFragment {
 
     /* Backing array list & adapter to store and display data */
@@ -293,7 +295,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
 
         /* Attach the database */
         mHistoryScoresDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("dailyScores")
+                .child(KEY_DAILY_SCORES)
                 .orderByKey()
                 .limitToLast(31); /* Only display the past month */
         mHistoryScoresDatabaseReference.addChildEventListener(mHistoryScoresChildEventListener);

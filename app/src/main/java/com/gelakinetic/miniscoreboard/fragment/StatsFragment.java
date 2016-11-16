@@ -53,6 +53,9 @@ import java.util.HashMap;
 
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_WINNERS;
+
 public class StatsFragment extends MiniScoreboardFragment {
 
     /* Statistics text */
@@ -545,13 +548,13 @@ public class StatsFragment extends MiniScoreboardFragment {
 
         /* Get this daily data, and order it by date */
         mStatsScoresDatabaseReference
-                .child("personalScores")
+                .child(KEY_DAILY_PERSONAL_SCORES)
                 .child(mUid)
                 .orderByKey()
                 .addChildEventListener(mStatsScoresChildEventListener);
 
         mStatsScoresDatabaseReference
-                .child("dailyWinners")
+                .child(KEY_DAILY_WINNERS)
                 .orderByValue()
                 .startAt(mUid)
                 .endAt(mUid)

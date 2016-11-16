@@ -47,6 +47,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_PUZZLE_TIME;
+
 public class DailyFragment extends MiniScoreboardFragment {
 
     private final ArrayList<DatabaseScoreEntry> mDailyEntries = new ArrayList<>();
@@ -248,9 +251,9 @@ public class DailyFragment extends MiniScoreboardFragment {
         });
 
         /* Get this daily data, and order it by date */
-        mDailyScoreDatabaseReference = FirebaseDatabase.getInstance().getReference().child("dailyScores")
+        mDailyScoreDatabaseReference = FirebaseDatabase.getInstance().getReference().child(KEY_DAILY_SCORES)
                 .child(Long.toString(calendar.getTimeInMillis() / 1000))
-                .orderByChild("mPuzzleTime")
+                .orderByChild(KEY_PUZZLE_TIME)
                 .limitToFirst(20);
         mDailyScoreDatabaseReference.addChildEventListener(mDailyScoreChildEventListener);
 
@@ -263,7 +266,7 @@ public class DailyFragment extends MiniScoreboardFragment {
             @Override
             public void onClick(View view) {
                 Intent crosswordIntent = new Intent(Intent.ACTION_VIEW);
-                crosswordIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));
+                crosswordIntent.setData(Uri.parse(getString(R.string.mini_crossword_url)));
                 startActivity(crosswordIntent);
             }
         });

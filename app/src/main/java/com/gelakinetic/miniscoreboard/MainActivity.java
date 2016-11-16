@@ -59,6 +59,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_USERS;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_WINNERS;
+
 public class MainActivity extends AppCompatActivity {
 
     /* Request code for intents */
@@ -190,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        mUsernameDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsernameDatabaseReference = FirebaseDatabase.getInstance().getReference().child(KEY_DAILY_USERS);
         /* Load the initial username hashmap */
         mUsernameDatabaseReference.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -281,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
 
         /* If this was launched from the notification to submit a score,
-         * raise a flag to "click" the fab
+         * raise a flag to click the fab
          */
         if (getIntent().getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
             /* Clear any pending notifications */
@@ -302,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        /* If this was launched from the notification to submit a score, "click" the fab */
+        /* If this was launched from the notification to submit a score, click the fab */
         if (intent.getBooleanExtra(MiniScoreboardAlarm.FROM_NOTIFICATION, false)) {
             /* Clear any pending notifications */
             MiniScoreboardAlarm.clearNotification(this);
@@ -385,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
             case REQ_CODE_SETTINGS: {
                 switch (resultCode) {
                     case MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED: {
-                        /* TODO remove user data from database */
                         startActivity(AuthUiActivity.createIntent(this));
                         finish();
                         break;
@@ -514,12 +518,12 @@ public class MainActivity extends AppCompatActivity {
         DatabaseScoreEntry score = new DatabaseScoreEntry(puzzleTime, puzzleSize);
 
         /* Submit the data, first to daily scores then to personal scores. */
-        database.child("dailyScores")
+        database.child(KEY_DAILY_SCORES)
                 .child(Long.toString(date))
                 .child(mCurrentUser.getUid())
                 .setValue(score);
 
-        database.child("personalScores")
+        database.child(KEY_DAILY_PERSONAL_SCORES)
                 .child(mCurrentUser.getUid())
                 .child(Long.toString(date))
                 .setValue(score);
@@ -531,7 +535,7 @@ public class MainActivity extends AppCompatActivity {
      * TODO document
      */
     private void checkForOldWinners() {
-        FirebaseDatabase.getInstance().getReference().child("dailyScores").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child(KEY_DAILY_SCORES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -553,7 +557,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkForWinner(DatabaseReference database, final long date) {
         /* Get all the scores for today */
-        database.child("dailyScores")
+        database.child(KEY_DAILY_SCORES)
                 .child(Long.toString(date))
                 .addListenerForSingleValueEvent(
                         new ValueEventListener() {
@@ -588,7 +592,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 /* Submit the data, first to daily scores then to personal scores. */
                                 for (String winner : winners) {
-                                    database.child("dailyWinners")
+                                    database.child(KEY_DAILY_WINNERS)
                                             .child(Long.toString(date) + "-" + winners.indexOf(winner))
                                             .setValue(winner);
                                 }

@@ -132,7 +132,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
     private static void showNotification(Context context) {
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-        notificationIntent.setData(Uri.parse("http://www.nytimes.com/crosswords/game/mini"));
+        notificationIntent.setData(Uri.parse(context.getString(R.string.mini_crossword_url)));
         PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
         Intent intent = new Intent(context, MainActivity.class);

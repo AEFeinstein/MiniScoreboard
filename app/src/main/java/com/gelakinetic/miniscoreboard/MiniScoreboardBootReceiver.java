@@ -35,7 +35,7 @@ public class MiniScoreboardBootReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 
             if (PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.pref_key_daily_notification), false)) {
