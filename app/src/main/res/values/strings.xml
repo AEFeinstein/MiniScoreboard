@@ -34,7 +34,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="menu_title_settings">Settings</string>
     <string name="menu_title_about">About</string>
-    <string name="menu_title_change_user">View Other\'s Stats</string>
+    <string name="menu_title_change_user">View Someone Else\'s Stats</string>
 
     <string name="about_message">
         Mini Scoreboard is an &lt;a href="https://github.com/AEFeinstein/MiniScoreboard"&gt;open source project&lt;/a&gt; on GitHub.&lt;br&gt;
@@ -74,8 +74,6 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
     <string name="action_play_crossword">Play Crossword</string>
     <string name="action_submit_score">Submit Score</string>
-
-    <string name="change_user_title">Pick a User</string>
 
     <!-- Settings Strings -->
     <string name="pref_account_group_title">Account Settings</string>

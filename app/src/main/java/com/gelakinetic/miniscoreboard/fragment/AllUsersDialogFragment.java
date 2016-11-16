@@ -79,7 +79,7 @@ public class AllUsersDialogFragment extends DialogFragment {
                         }
                     }
                 })
-                .setTitle(R.string.change_user_title)
+                .setTitle(R.string.menu_title_change_user)
                 .show();
     }
 
