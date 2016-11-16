@@ -299,8 +299,6 @@ public class MainActivity extends AppCompatActivity {
             /* The fab will be clicked after usernames have been loaded */
             mWasLaunchedFromNotification = true;
         }
-
-        //checkForOldWinners();
     }
 
     /**
@@ -533,25 +531,6 @@ public class MainActivity extends AppCompatActivity {
                 .setValue(score);
 
         checkForWinner(database, date);
-    }
-
-    /**
-     * TODO document
-     */
-    private void checkForOldWinners() {
-        FirebaseDatabase.getInstance().getReference().child(KEY_DAILY_SCORES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    checkForWinner(FirebaseDatabase.getInstance().getReference(), Long.parseLong(snapshot.getKey()));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     /**
