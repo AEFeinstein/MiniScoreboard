@@ -42,6 +42,7 @@ public class UserNameInputDialogFragment extends DialogFragment {
     public static final String USERNAME_KEY = "USERNAME_KEY";
     private EditText mEditText;
     private Button mPositiveButton;
+    private String mOldUserName;
 
     /**
      * This is overridden to display a custom dialog, built with AlertDialog.Builder.
@@ -63,7 +64,8 @@ public class UserNameInputDialogFragment extends DialogFragment {
 
         /* Attempt to fill in the username before it's changed */
         try {
-            mEditText.setText(getActivity().getIntent().getStringExtra(USERNAME_KEY));
+            mOldUserName = getActivity().getIntent().getStringExtra(USERNAME_KEY);
+            mEditText.setText(mOldUserName);
         } catch (Exception e) {
             /* eat it, just don't set a name */
         }
@@ -96,7 +98,21 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        createNewUserName(mEditText.getText().toString().trim());
+                        String newUserName = mEditText.getText().toString().trim();
+                        if (mOldUserName != null) {
+                            if (!mOldUserName.equals(newUserName)) {
+                                /* Username existed, but changed */
+                                createNewUserName(newUserName);
+                                /* This code will restart the activity & refresh the
+                                 * username when the preferences are exited
+                                 */
+                                getActivity().setResult(MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED);
+                            }
+                            /* Otherwise the username didn't change, do nothing */
+                        } else {
+                            /* Username didn't exist, create it now */
+                            createNewUserName(newUserName);
+                        }
                     }
                 })
                 .show();

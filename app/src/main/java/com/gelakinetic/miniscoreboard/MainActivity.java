@@ -395,6 +395,11 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
                     }
+                    case MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED: {
+                        /* Close & reopen this activity */
+                        finish();
+                        startActivity(new Intent(this, MainActivity.class));
+                    }
                 }
                 break;
             }

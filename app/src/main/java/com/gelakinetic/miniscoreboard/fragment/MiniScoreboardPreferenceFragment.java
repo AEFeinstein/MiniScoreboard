@@ -39,6 +39,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
     public static final int RES_CODE_ACCT_DELETED = 841291;
     public static final int RES_CODE_SIGNED_OUT = 218652;
+    public static final int RES_CODE_USERNAME_CHANGED = 539471;
 
     /**
      * Create the preferences from XML, then attach some listeners to the preferences which are
