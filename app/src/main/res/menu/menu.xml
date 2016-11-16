@@ -24,7 +24,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/menu_change_user"
         android:icon="@drawable/ic_account_box_white_24dp"
-        android:title="@string/menu_title_settings"
+        android:title="@string/menu_title_change_user"
         app:showAsAction="always"
         android:actionViewClass="android.widget.ImageView"
         android:visible="false" />
