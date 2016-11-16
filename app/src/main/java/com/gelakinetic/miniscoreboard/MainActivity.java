@@ -351,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_settings: {
                 Intent in = new Intent();
+                in.putExtra(UserNameInputDialogFragment.USERNAME_KEY, getUserNameFromUid(mCurrentUser.getUid()));
                 in.setClass(MainActivity.this, MiniScoreboardPreferenceActivity.class);
                 startActivityForResult(in, REQ_CODE_SETTINGS);
                 return true;

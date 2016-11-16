@@ -39,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserNameInputDialogFragment extends DialogFragment {
 
+    public static final String USERNAME_KEY = "USERNAME_KEY";
     private EditText mEditText;
     private Button mPositiveButton;
 
@@ -59,6 +60,14 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .inflate(R.layout.dialog_username_input, null);
 
         mEditText = (EditText) customView.findViewById(R.id.user_name_edit_text);
+
+        /* Attempt to fill in the username before it's changed */
+        try {
+            mEditText.setText(getActivity().getIntent().getStringExtra(USERNAME_KEY));
+        } catch (Exception e) {
+            /* eat it, just don't set a name */
+        }
+
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -95,9 +104,13 @@ public class UserNameInputDialogFragment extends DialogFragment {
         /* Set it on the fragment, not the dialog! */
         this.setCancelable(false);
 
-        /* Grab a reference to the button in order to enable & disable it */
+        /* Grab a reference to the button & set the initial enabled state */
         mPositiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        mPositiveButton.setEnabled(false);
+        if (mEditText.getText().length() > 0) {
+            mPositiveButton.setEnabled(true);
+        } else {
+            mPositiveButton.setEnabled(false);
+        }
 
         /* Return the dialog */
         return alertDialog;
