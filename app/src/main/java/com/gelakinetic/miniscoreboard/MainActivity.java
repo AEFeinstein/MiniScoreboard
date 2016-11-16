@@ -59,9 +59,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_PERSONAL_SCORES;
 import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_USERS;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_USERS;
 import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_WINNERS;
 
 public class MainActivity extends AppCompatActivity {
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        mUsernameDatabaseReference = FirebaseDatabase.getInstance().getReference().child(KEY_DAILY_USERS);
+        mUsernameDatabaseReference = FirebaseDatabase.getInstance().getReference().child(KEY_USERS);
         /* Load the initial username hashmap */
         mUsernameDatabaseReference.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -523,7 +523,7 @@ public class MainActivity extends AppCompatActivity {
                 .child(mCurrentUser.getUid())
                 .setValue(score);
 
-        database.child(KEY_DAILY_PERSONAL_SCORES)
+        database.child(KEY_PERSONAL_SCORES)
                 .child(mCurrentUser.getUid())
                 .child(Long.toString(date))
                 .setValue(score);

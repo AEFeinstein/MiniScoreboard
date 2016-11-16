@@ -37,7 +37,7 @@ import com.gelakinetic.miniscoreboard.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_USERS;
+import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_USERS;
 
 public class UserNameInputDialogFragment extends DialogFragment {
 
@@ -143,7 +143,7 @@ public class UserNameInputDialogFragment extends DialogFragment {
 
         /* Get a database reference */
         FirebaseDatabase.getInstance().getReference()
-                .child(KEY_DAILY_USERS)
+                .child(KEY_USERS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(username);
 

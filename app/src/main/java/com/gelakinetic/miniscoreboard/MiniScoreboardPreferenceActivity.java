@@ -57,4 +57,13 @@ public class MiniScoreboardPreferenceActivity extends AppCompatActivity {
     public void showSnackbar(int message) {
         Snackbar.make(mRootView, message, Snackbar.LENGTH_LONG).show();
     }
+
+    /**
+     * Show a little message on the Snackbar
+     *
+     * @param message A message to display
+     */
+    public void showSnackbar(String message) {
+        Snackbar.make(mRootView, message, Snackbar.LENGTH_LONG).show();
+    }
 }

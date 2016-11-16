@@ -22,8 +22,8 @@ package com.gelakinetic.miniscoreboard;
 public class DatabaseKeys {
     public static final String KEY_DAILY_SCORES = "dailyScores";
     public static final String KEY_DAILY_WINNERS = "dailyWinners";
-    public static final String KEY_DAILY_PERSONAL_SCORES = "personalScores";
-    public static final String KEY_DAILY_USERS = "users";
+    public static final String KEY_PERSONAL_SCORES = "personalScores";
+    public static final String KEY_USERS = "users";
 
     public static final String KEY_PUZZLE_TIME = "mPuzzleTime";
     public static final String KEY_PUZZLE_SIZE = "mPuzzleSize";
