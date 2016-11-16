@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.database;
 
 public class DatabaseKeys {
     public static final String KEY_DAILY_SCORES = "dailyScores";

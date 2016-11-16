@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.notification;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -31,6 +31,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+
+import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 
 import java.util.Calendar;
 
@@ -182,7 +185,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to clear the notification from
      */
-    static void clearNotification(Context context) {
+    public static void clearNotification(Context context) {
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyMgr.cancel(NOTIFICATION_ID);

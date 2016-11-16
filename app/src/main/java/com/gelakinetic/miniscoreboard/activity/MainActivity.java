@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,15 +38,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.gelakinetic.miniscoreboard.fragment.AboutDialogFragment;
-import com.gelakinetic.miniscoreboard.fragment.AllUsersDialogFragment;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
+import com.gelakinetic.miniscoreboard.notification.MiniScoreboardAlarm;
+import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.ui.ViewPagerAdapter;
+import com.gelakinetic.miniscoreboard.fragment.dialog.AboutDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.AllUsersDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
-import com.gelakinetic.miniscoreboard.fragment.ScoreInputDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
-import com.gelakinetic.miniscoreboard.fragment.UserNameInputDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.UserNameInputDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -59,10 +63,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_PERSONAL_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_USERS;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
 
 public class MainActivity extends AppCompatActivity {
 

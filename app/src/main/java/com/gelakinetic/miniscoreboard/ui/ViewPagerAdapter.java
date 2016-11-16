@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.ui;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -27,7 +27,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     /* The list of fragments to be displayed by this adapter */
     private final List<Fragment> mFragmentList = new ArrayList<>();

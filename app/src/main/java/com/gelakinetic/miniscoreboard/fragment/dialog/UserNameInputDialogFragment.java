@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard.fragment;
+package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -31,13 +31,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.gelakinetic.miniscoreboard.MainActivity;
-import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
+import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_USERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 
 public class UserNameInputDialogFragment extends DialogFragment {
 

@@ -34,7 +34,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".AuthUiActivity"
+            android:name=".activity.AuthUiActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -44,18 +44,18 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".MiniScoreboardPreferenceActivity"
+            android:name=".activity.MiniScoreboardPreferenceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
         <receiver
-            android:name=".MiniScoreboardBootReceiver"
+            android:name=".notification.MiniScoreboardBootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -63,7 +63,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         </receiver>
 
         <receiver
-            android:name=".MiniScoreboardAlarm"
+            android:name=".notification.MiniScoreboardAlarm"
             android:enabled="true" />
 
     </application>

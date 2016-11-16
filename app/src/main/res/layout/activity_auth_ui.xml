@@ -23,6 +23,6 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AuthUiActivity">
+    tools:context=".activity.AuthUiActivity">
 
 </ScrollView>

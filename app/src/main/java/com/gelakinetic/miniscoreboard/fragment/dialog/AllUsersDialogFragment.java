@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard.fragment;
+package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -27,8 +27,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
-import com.gelakinetic.miniscoreboard.MainActivity;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

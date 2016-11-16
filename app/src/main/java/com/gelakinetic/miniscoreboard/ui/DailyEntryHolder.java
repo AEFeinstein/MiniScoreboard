@@ -17,12 +17,13 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.ui;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
+import com.gelakinetic.miniscoreboard.R;
 
 public class DailyEntryHolder extends ParentViewHolder {
 

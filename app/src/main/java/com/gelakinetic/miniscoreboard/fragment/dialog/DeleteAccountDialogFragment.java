@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard.fragment;
+package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,9 +27,10 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
+import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,10 +43,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_WINNERS;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_PERSONAL_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_USERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 
 public class DeleteAccountDialogFragment extends DialogFragment {
 

@@ -17,13 +17,14 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.ui;
 
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
+import com.gelakinetic.miniscoreboard.R;
 
 public class ScoreEntryHolder extends ChildViewHolder {
 

@@ -28,12 +28,12 @@ import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
-import com.gelakinetic.miniscoreboard.DailyEntryHolder;
-import com.gelakinetic.miniscoreboard.DatabaseDailyEntry;
-import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.MainActivity;
+import com.gelakinetic.miniscoreboard.ui.DailyEntryHolder;
+import com.gelakinetic.miniscoreboard.database.DatabaseDailyEntry;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
-import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
+import com.gelakinetic.miniscoreboard.ui.ScoreEntryHolder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +44,7 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
 
 public class HistoryFragment extends MiniScoreboardFragment {
 

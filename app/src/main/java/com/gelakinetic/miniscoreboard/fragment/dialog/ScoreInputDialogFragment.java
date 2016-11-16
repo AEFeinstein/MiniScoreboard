@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard.fragment;
+package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -33,7 +33,7 @@ import android.view.View;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
-import com.gelakinetic.miniscoreboard.MainActivity;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
 
 import java.text.DateFormat;

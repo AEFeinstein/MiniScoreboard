@@ -30,10 +30,10 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.gelakinetic.miniscoreboard.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.MainActivity;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
-import com.gelakinetic.miniscoreboard.ScoreEntryHolder;
+import com.gelakinetic.miniscoreboard.ui.ScoreEntryHolder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -47,8 +47,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.DatabaseKeys.KEY_PUZZLE_TIME;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PUZZLE_TIME;
 
 public class DailyFragment extends MiniScoreboardFragment {
 

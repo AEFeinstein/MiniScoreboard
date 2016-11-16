@@ -17,7 +17,7 @@
  * along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.miniscoreboard;
+package com.gelakinetic.miniscoreboard.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
+import com.gelakinetic.miniscoreboard.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Collections;

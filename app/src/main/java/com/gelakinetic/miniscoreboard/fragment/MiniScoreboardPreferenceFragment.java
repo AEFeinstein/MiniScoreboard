@@ -25,9 +25,11 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.firebase.ui.auth.AuthUI;
-import com.gelakinetic.miniscoreboard.MainActivity;
-import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
+import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.fragment.dialog.DeleteAccountDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.UserNameInputDialogFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
