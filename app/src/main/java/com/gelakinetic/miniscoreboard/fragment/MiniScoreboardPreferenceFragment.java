@@ -19,11 +19,8 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -33,8 +30,6 @@ import com.gelakinetic.miniscoreboard.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
     public static final int RES_CODE_ACCT_DELETED = 841291;
@@ -89,45 +84,11 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                                .setMessage("Are you sure you want to delete this account?")
-                                .setPositiveButton("Yes, nuke it!", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        deleteAccount();
-                                    }
-                                })
-                                .setNegativeButton("No", null)
-                                .create();
-
-                        dialog.show();
+                        DeleteAccountDialogFragment newFragment = new DeleteAccountDialogFragment();
+                        newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
+                                MainActivity.DIALOG_TAG);
                         return true;
                     }
                 });
-    }
-
-
-    /**
-     * Delete this user's account
-     */
-    @MainThread
-    private void deleteAccount() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (null != currentUser) {
-            Task<Void> task = currentUser.delete();
-            task.addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        getActivity().setResult(RES_CODE_ACCT_DELETED);
-                        getActivity().finish();
-                    } else {
-                        ((MiniScoreboardPreferenceActivity) getActivity())
-                                .showSnackbar(R.string.delete_account_failed);
-                    }
-                }
-            });
-        }
     }
 }
