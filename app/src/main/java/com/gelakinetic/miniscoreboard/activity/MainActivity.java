@@ -38,19 +38,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.notification.MiniScoreboardAlarm;
 import com.gelakinetic.miniscoreboard.R;
-import com.gelakinetic.miniscoreboard.ui.ViewPagerAdapter;
-import com.gelakinetic.miniscoreboard.fragment.dialog.AboutDialogFragment;
-import com.gelakinetic.miniscoreboard.fragment.dialog.AllUsersDialogFragment;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.fragment.DailyFragment;
 import com.gelakinetic.miniscoreboard.fragment.HistoryFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardFragment;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
-import com.gelakinetic.miniscoreboard.fragment.dialog.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.AboutDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.AllUsersDialogFragment;
+import com.gelakinetic.miniscoreboard.fragment.dialog.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.dialog.UserNameInputDialogFragment;
+import com.gelakinetic.miniscoreboard.notification.MiniScoreboardAlarm;
+import com.gelakinetic.miniscoreboard.ui.ViewPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -63,10 +63,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
 import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -301,6 +301,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mViewPager != null) {
+            onPageSelected(mViewPager.getCurrentItem());
+        }
+    }
+
     /**
      * TODO document
      *
@@ -476,20 +484,21 @@ public class MainActivity extends AppCompatActivity {
      * @param position The position of the fragment currently being displayed
      */
     private void onPageSelected(int position) {
-        if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowFab()) {
-            mFab.show();
-        } else {
-            mFab.hide();
-        }
+        if (mViewPagerAdapter != null) {
+            if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowFab()) {
+                mFab.show();
+            } else {
+                mFab.hide();
+            }
 
-        if (mChangeUserMenuItem != null) {
-            if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton() &&
-                    !mChangeUserMenuItem.isVisible()) {
-                /* Show it */
-                mChangeUserMenuItem.setVisible(true);
-            } else if (mChangeUserMenuItem.isVisible()) {
-                /* Hide it */
-                mChangeUserMenuItem.setVisible(false);
+            if (mChangeUserMenuItem != null) {
+                if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton()) {
+                    /* Show it */
+                    mChangeUserMenuItem.setVisible(true);
+                } else {
+                    /* Hide it */
+                    mChangeUserMenuItem.setVisible(false);
+                }
             }
         }
     }
