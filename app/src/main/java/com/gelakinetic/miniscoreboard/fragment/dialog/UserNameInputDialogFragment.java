@@ -31,9 +31,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
-import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;

@@ -27,8 +27,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
-import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.fragment.StatsFragment;
 
 import java.util.ArrayList;

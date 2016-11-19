@@ -33,8 +33,8 @@ import android.view.View;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
-import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
 
 import java.text.DateFormat;
 import java.util.Calendar;

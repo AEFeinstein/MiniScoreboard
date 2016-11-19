@@ -34,9 +34,9 @@ import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.renderer.YRenderer;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.ChartView;
-import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.activity.MainActivity;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.ui.ScoreEntryHolder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -53,8 +53,8 @@ import java.util.HashMap;
 
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
 import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
 
 public class StatsFragment extends MiniScoreboardFragment {
 

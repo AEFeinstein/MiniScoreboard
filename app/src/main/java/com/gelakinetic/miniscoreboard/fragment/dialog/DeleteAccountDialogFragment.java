@@ -27,9 +27,9 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
-import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.R;
+import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
+import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
