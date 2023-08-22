@@ -30,7 +30,7 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
@@ -51,7 +51,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      */
     private static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, MiniScoreboardAlarm.class);
-        return PendingIntent.getBroadcast(context, 0, intent, 0);
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**
@@ -136,7 +136,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
         notificationIntent.setData(Uri.parse(context.getString(R.string.mini_crossword_url)));
-        PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(FROM_NOTIFICATION, true);

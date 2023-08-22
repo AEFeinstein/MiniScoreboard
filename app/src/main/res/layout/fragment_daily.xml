@@ -19,13 +19,13 @@ You should have received a copy of the GNU General Public License
 along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/date_text_view"
         style="@android:style/TextAppearance.Large"
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/play_puzzle_button"
         android:text="@string/play_puzzle"
         style="@style/Widget.AppCompat.Button.Colored"
@@ -44,9 +44,9 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/statistics_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/statistics_card" />
-</android.support.v7.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

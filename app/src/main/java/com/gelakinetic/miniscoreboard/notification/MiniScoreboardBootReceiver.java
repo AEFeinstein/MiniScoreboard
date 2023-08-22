@@ -22,7 +22,7 @@ package com.gelakinetic.miniscoreboard.notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import com.gelakinetic.miniscoreboard.R;
 

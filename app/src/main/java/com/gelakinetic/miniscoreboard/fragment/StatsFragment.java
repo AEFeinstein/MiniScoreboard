@@ -20,8 +20,8 @@
 package com.gelakinetic.miniscoreboard.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +30,7 @@ import android.widget.TextView;
 
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartEntry;
-import com.db.chart.renderer.AxisRenderer;
-import com.db.chart.renderer.YRenderer;
+import com.db.chart.view.AxisController;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.ChartView;
 import com.gelakinetic.miniscoreboard.R;
@@ -305,8 +304,8 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Format the chart */
         mBarChartView.setXAxis(true)
                 .setYAxis(true)
-                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
-                .setYLabels(AxisRenderer.LabelPosition.OUTSIDE)
+                .setXLabels(AxisController.LabelPosition.OUTSIDE)
+                .setYLabels(AxisController.LabelPosition.OUTSIDE)
                 .setLabelsColor(getResources().getColor(R.color.colorPrimaryDark))
                 .setAxisColor(getResources().getColor(R.color.colorPrimaryDark));
 
@@ -494,30 +493,29 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Reset the chart data */
         mBarChartView.dismiss();
 
-        try {
-            /* Use reflection to get the Y Axis Renderer */
-            ChartView cv = mBarChartView;
-            Field f = ChartView.class.getDeclaredField("yRndr");
-            f.setAccessible(true);
-            YRenderer yRndr = (YRenderer) f.get(cv);
-
-            /* Set the vertical step on the chart to display 5 marks */
-            int step = (int) Math.ceil(maxValue / MAX_NUM_Y_LABELS);
-            mBarChartView.setStep(step);
-
-            while (maxValue % step != 0) {
-                maxValue++;
-            }
-
-            /* Manually set the boarder values in the renderer. For whatever reason, this
-             * does not get automatically recalculated when new data is swapped into the chart
-             */
-            yRndr.setBorderValues(0, (int) maxValue);
-        } catch (NoSuchFieldException e) {
-            /* Eat it */
-        } catch (IllegalAccessException e) {
-            /* Eat it */
-        }
+        // TODO, this worked with williamchart 2.3.0, which no longer exists
+//        try {
+//            /* Use reflection to get the Y Axis Renderer */
+//            ChartView cv = mBarChartView;
+//            Field f = ChartView.class.getDeclaredField("yRndr");
+//            f.setAccessible(true);
+//            YRenderer yRndr = (YRenderer) f.get(cv);
+//
+//            /* Set the vertical step on the chart to display 5 marks */
+//            int step = (int) Math.ceil(maxValue / MAX_NUM_Y_LABELS);
+//            mBarChartView.setStep(step);
+//
+//            while (maxValue % step != 0) {
+//                maxValue++;
+//            }
+//
+//            /* Manually set the boarder values in the renderer. For whatever reason, this
+//             * does not get automatically recalculated when new data is swapped into the chart
+//             */
+//            yRndr.setBorderValues(0, (int) maxValue);
+//        } catch (NoSuchFieldException | IllegalAccessException e) {
+//            /* Eat it */
+//        }
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {

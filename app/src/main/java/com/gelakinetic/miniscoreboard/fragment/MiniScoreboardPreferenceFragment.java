@@ -20,9 +20,9 @@
 package com.gelakinetic.miniscoreboard.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import androidx.annotation.NonNull;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.gelakinetic.miniscoreboard.R;

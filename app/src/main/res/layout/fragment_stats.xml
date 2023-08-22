@@ -19,13 +19,13 @@ You should have received a copy of the GNU General Public License
 along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -33,7 +33,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/user_name_text_view"
             style="@android:style/TextAppearance.Large"
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_height="1dp"
             android:background="@color/colorAccent" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/wins_text_view"
             style="@android:style/TextAppearance.Large"
             android:layout_width="match_parent"
@@ -57,14 +57,14 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_height="1dp"
             android:background="@color/colorAccent" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mean_text_view"
             style="@android:style/TextAppearance.Large"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center_vertical" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/stddev_text_view"
             style="@android:style/TextAppearance.Large"
             android:layout_width="match_parent"
@@ -86,11 +86,11 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_height="1dp"
             android:background="@color/colorAccent" />
 
-    </android.support.v7.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/statistics_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/statistics_card" />
-</android.support.v7.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

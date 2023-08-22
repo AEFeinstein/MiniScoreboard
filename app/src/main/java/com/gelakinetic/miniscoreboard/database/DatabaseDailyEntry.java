@@ -19,7 +19,7 @@
 
 package com.gelakinetic.miniscoreboard.database;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.google.firebase.database.Exclude;

@@ -19,7 +19,7 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 public abstract class MiniScoreboardFragment extends Fragment {
     public abstract boolean shouldShowFab();

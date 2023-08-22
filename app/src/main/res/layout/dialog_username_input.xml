@@ -24,7 +24,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/user_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,5 +32,5 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         android:maxLines="1">
 
         <requestFocus />
-    </android.support.v7.widget.AppCompatEditText>
+    </androidx.appcompat.widget.AppCompatEditText>
 </LinearLayout>

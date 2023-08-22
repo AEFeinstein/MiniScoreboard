@@ -19,8 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gelakinetic.miniscoreboard">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -36,7 +35,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
         <activity
             android:name=".activity.AuthUiActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -56,7 +56,8 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
         <receiver
             android:name=".notification.MiniScoreboardBootReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

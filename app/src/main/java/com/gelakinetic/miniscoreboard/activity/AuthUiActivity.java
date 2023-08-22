@@ -23,16 +23,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.StringRes;
 
 import com.firebase.ui.auth.AuthUI;
 import com.gelakinetic.miniscoreboard.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 public class AuthUiActivity extends Activity {
 
@@ -79,7 +80,8 @@ public class AuthUiActivity extends Activity {
                     AuthUI.getInstance().createSignInIntentBuilder()
                             .setTheme(R.style.AppTheme)
                             .setLogo(R.mipmap.ic_launcher)
-                            .setProviders(Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            .setAvailableProviders(Arrays.asList(
+                                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
                             /*.setTosUrl(GOOGLE_TOS_URL) TODO add a TOS? */
                             .build(),
                     RC_SIGN_IN);
