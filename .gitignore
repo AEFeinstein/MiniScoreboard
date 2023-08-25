@@ -41,7 +41,6 @@ captures/
 app/google-services.json
 
 # These came from Android Studio
-*.iml
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -49,3 +48,5 @@ app/google-services.json
 .DS_Store
 /build
 /captures
+*metadata.json
+*.hprof

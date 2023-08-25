@@ -20,8 +20,10 @@
 package com.gelakinetic.miniscoreboard.fragment;
 
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import com.db.chart.model.ChartEntry;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.ChartView;
+import com.db.chart.view.YController;
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
@@ -493,29 +496,27 @@ public class StatsFragment extends MiniScoreboardFragment {
         /* Reset the chart data */
         mBarChartView.dismiss();
 
-        // TODO, this worked with williamchart 2.3.0, which no longer exists
-//        try {
-//            /* Use reflection to get the Y Axis Renderer */
-//            ChartView cv = mBarChartView;
-//            Field f = ChartView.class.getDeclaredField("yRndr");
-//            f.setAccessible(true);
-//            YRenderer yRndr = (YRenderer) f.get(cv);
-//
-//            /* Set the vertical step on the chart to display 5 marks */
-//            int step = (int) Math.ceil(maxValue / MAX_NUM_Y_LABELS);
-//            mBarChartView.setStep(step);
-//
-//            while (maxValue % step != 0) {
-//                maxValue++;
-//            }
-//
-//            /* Manually set the boarder values in the renderer. For whatever reason, this
-//             * does not get automatically recalculated when new data is swapped into the chart
-//             */
-//            yRndr.setBorderValues(0, (int) maxValue);
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            /* Eat it */
-//        }
+        /* Set the vertical step on the chart to display 5 marks */
+        int step = (int) Math.ceil(maxValue / MAX_NUM_Y_LABELS);
+        mBarChartView.setStep(step);
+
+        try {
+            /* Use reflection to get the Y Axis Renderer */
+            Field f = ChartView.class.getDeclaredField("verController");
+            f.setAccessible(true);
+            YController yCtrl = (YController) f.get(mBarChartView);
+
+            while (maxValue % step != 0) {
+                maxValue++;
+            }
+
+            /* Manually set the boarder values in the renderer. For whatever reason, this
+             * does not get automatically recalculated when new data is swapped into the chart
+             */
+            yCtrl.setBorderValues(0, (int) maxValue);
+        } catch (NoSuchFieldException | IllegalAccessException | NullPointerException e) {
+            /* Eat it */
+        }
 
         /* Add all bar sets to the chart */
         for (int key : mBarsHashMap.keySet()) {
