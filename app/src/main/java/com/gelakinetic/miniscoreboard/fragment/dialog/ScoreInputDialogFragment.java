@@ -20,16 +20,16 @@
 package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
+
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
-import android.view.View;
+import androidx.fragment.app.DialogFragment;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
@@ -81,22 +81,19 @@ public class ScoreInputDialogFragment extends DialogFragment
         /* Set up the button to modify the date, and set the button text as the date */
         mDateButton = (AppCompatButton) customView.findViewById(R.id.date_button);
         setDateButtonText();
-        mDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /* Display a Calendar Date Picker dialog */
-                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                        .setPreselectedDate(
-                                mCalendar.get(Calendar.YEAR),
-                                mCalendar.get(Calendar.MONTH),
-                                mCalendar.get(Calendar.DAY_OF_MONTH))
-                        .setDoneText(getContext().getResources().getString(R.string.button_ok_text))
-                        .setCancelText(
-                                getContext().getResources().getString(R.string.button_cancel_text))
-                        .setThemeLight()
-                        .setOnDateSetListener(ScoreInputDialogFragment.this);
-                cdp.show(getActivity().getSupportFragmentManager(), MainActivity.DATE_PICKER_TAG);
-            }
+        mDateButton.setOnClickListener(view -> {
+            /* Display a Calendar Date Picker dialog */
+            CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                    .setPreselectedDate(
+                            mCalendar.get(Calendar.YEAR),
+                            mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH))
+                    .setDoneText(getContext().getResources().getString(R.string.button_ok_text))
+                    .setCancelText(
+                            getContext().getResources().getString(R.string.button_cancel_text))
+                    .setThemeLight()
+                    .setOnDateSetListener(ScoreInputDialogFragment.this);
+            cdp.show(getActivity().getSupportFragmentManager(), MainActivity.DATE_PICKER_TAG);
         });
 
         /* Get a reference to the spinner, though don't do anything with it for now */
@@ -112,36 +109,30 @@ public class ScoreInputDialogFragment extends DialogFragment
         return new AlertDialog.Builder(getContext())
                 .setView(customView)
                 .setTitle(R.string.score_input_title)
-                .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setPositiveButton(R.string.button_ok_text, (dialogInterface, i) -> {
 
-                        /* Get the array that maps spinner position to puzzle size */
-                        int sizeValues[] = getResources().getIntArray(R.array.puzzle_sizes_values);
+                    /* Get the array that maps spinner position to puzzle size */
+                    int[] sizeValues = getResources().getIntArray(R.array.puzzle_sizes_values);
 
-                        /* Have the activity submit the data */
-                        ((MainActivity) getActivity()).submitNewScore(
-                                mCalendar.getTimeInMillis() / 1000,
-                                mTimePicker.getTime(),
-                                sizeValues[mPuzzleSizeSpinner.getSelectedItemPosition()]);
+                    /* Have the activity submit the data */
+                    ((MainActivity) getActivity()).submitNewScore(
+                            mCalendar.getTimeInMillis() / 1000,
+                            mTimePicker.getTime(),
+                            sizeValues[mPuzzleSizeSpinner.getSelectedItemPosition()]);
 
-                        /* We're done here */
-                        dialogInterface.dismiss();
+                    /* We're done here */
+                    dialogInterface.dismiss();
 
-                        /* Save the time this puzzle was submitted */
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putLong(getString(R.string.pref_key_last_submission), System.currentTimeMillis());
-                        editor.apply();
-                    }
+                    /* Save the time this puzzle was submitted */
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putLong(getString(R.string.pref_key_last_submission), System.currentTimeMillis());
+                    editor.apply();
                 })
                 .setNegativeButton(R.string.button_cancel_text,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                        (dialogInterface, i) -> {
                             /* We're done here */
-                                dialogInterface.dismiss();
-                            }
+                            dialogInterface.dismiss();
                         })
                 .show();
     }

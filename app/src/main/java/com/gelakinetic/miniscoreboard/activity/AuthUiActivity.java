@@ -33,7 +33,7 @@ import com.gelakinetic.miniscoreboard.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class AuthUiActivity extends Activity {
 
@@ -80,8 +80,8 @@ public class AuthUiActivity extends Activity {
                     AuthUI.getInstance().createSignInIntentBuilder()
                             .setTheme(R.style.AppTheme)
                             .setLogo(R.mipmap.ic_launcher)
-                            .setAvailableProviders(Arrays.asList(
-                                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
+                            .setAvailableProviders(Collections.singletonList(
+                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
                             /*.setTosUrl(GOOGLE_TOS_URL) TODO add a TOS? */
                             .build(),
                     RC_SIGN_IN);

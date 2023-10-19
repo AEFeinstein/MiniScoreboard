@@ -71,10 +71,7 @@ public class DatabaseDailyEntry implements Comparable<DatabaseDailyEntry>, Paren
     public boolean equals(Object obj) {
         if (!(obj instanceof DatabaseDailyEntry)) {
             return false;
-        } else if (((DatabaseDailyEntry) obj).mDate == this.mDate) {
-            return true;
-        }
-        return false;
+        } else return ((DatabaseDailyEntry) obj).mDate == this.mDate;
     }
 
     /**

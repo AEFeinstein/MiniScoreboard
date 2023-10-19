@@ -20,12 +20,13 @@
 package com.gelakinetic.miniscoreboard.activity;
 
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.gelakinetic.miniscoreboard.R;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MiniScoreboardPreferenceActivity extends AppCompatActivity {
 

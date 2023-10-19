@@ -19,17 +19,19 @@
 
 package com.gelakinetic.miniscoreboard.fragment.dialog;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
+
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
@@ -37,8 +39,6 @@ import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.fragment.MiniScoreboardPreferenceFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 
 public class UserNameInputDialogFragment extends DialogFragment {
 
@@ -86,11 +86,7 @@ public class UserNameInputDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.length() > 0) {
-                    mPositiveButton.setEnabled(true);
-                } else {
-                    mPositiveButton.setEnabled(false);
-                }
+                mPositiveButton.setEnabled(editable.length() > 0);
             }
         });
         /* Display the dialog */
@@ -98,24 +94,21 @@ public class UserNameInputDialogFragment extends DialogFragment {
                 .setCancelable(false)
                 .setView(customView)
                 .setTitle(R.string.username_input_title)
-                .setPositiveButton(R.string.button_ok_text, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String newUserName = mEditText.getText().toString().trim();
-                        if (mOldUserName != null) {
-                            if (!mOldUserName.equals(newUserName)) {
-                                /* Username existed, but changed */
-                                createNewUserName(newUserName);
-                                /* This code will restart the activity & refresh the
-                                 * username when the preferences are exited
-                                 */
-                                getActivity().setResult(MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED);
-                            }
-                            /* Otherwise the username didn't change, do nothing */
-                        } else {
-                            /* Username didn't exist, create it now */
+                .setPositiveButton(R.string.button_ok_text, (dialogInterface, i) -> {
+                    String newUserName = mEditText.getText().toString().trim();
+                    if (mOldUserName != null) {
+                        if (!mOldUserName.equals(newUserName)) {
+                            /* Username existed, but changed */
                             createNewUserName(newUserName);
+                            /* This code will restart the activity & refresh the
+                             * username when the preferences are exited
+                             */
+                            getActivity().setResult(MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED);
                         }
+                        /* Otherwise the username didn't change, do nothing */
+                    } else {
+                        /* Username didn't exist, create it now */
+                        createNewUserName(newUserName);
                     }
                 })
                 .show();
@@ -125,11 +118,7 @@ public class UserNameInputDialogFragment extends DialogFragment {
 
         /* Grab a reference to the button & set the initial enabled state */
         mPositiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        if (mEditText.getText().length() > 0) {
-            mPositiveButton.setEnabled(true);
-        } else {
-            mPositiveButton.setEnabled(false);
-        }
+        mPositiveButton.setEnabled(mEditText.getText().length() > 0);
 
         /* Return the dialog */
         return alertDialog;

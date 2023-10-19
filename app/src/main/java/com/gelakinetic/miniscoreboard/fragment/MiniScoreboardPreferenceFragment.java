@@ -20,8 +20,7 @@
 package com.gelakinetic.miniscoreboard.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.preference.Preference;
+
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.firebase.ui.auth.AuthUI;
@@ -30,8 +29,6 @@ import com.gelakinetic.miniscoreboard.activity.MainActivity;
 import com.gelakinetic.miniscoreboard.activity.MiniScoreboardPreferenceActivity;
 import com.gelakinetic.miniscoreboard.fragment.dialog.DeleteAccountDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.dialog.UserNameInputDialogFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
     public static final int RES_CODE_ACCT_DELETED = 841291;
@@ -50,47 +47,35 @@ public class MiniScoreboardPreferenceFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences);
 
         findPreference(getString(R.string.pref_key_pref_change_username_btn))
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        UserNameInputDialogFragment newFragment = new UserNameInputDialogFragment();
-                        newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
-                                MainActivity.DIALOG_TAG);
-                        return true;
-                    }
+                .setOnPreferenceClickListener(preference -> {
+                    UserNameInputDialogFragment newFragment = new UserNameInputDialogFragment();
+                    newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
+                            MainActivity.DIALOG_TAG);
+                    return true;
                 });
 
         findPreference(getString(R.string.pref_key_sign_out_btn))
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        AuthUI.getInstance()
-                                .signOut(getActivity())
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            getActivity().setResult(RES_CODE_SIGNED_OUT);
-                                            getActivity().finish();
-                                        } else {
-                                            ((MiniScoreboardPreferenceActivity) getActivity())
-                                                    .showSnackbar(R.string.sign_out_failed);
-                                        }
-                                    }
-                                });
-                        return true;
-                    }
+                .setOnPreferenceClickListener(preference -> {
+                    AuthUI.getInstance()
+                            .signOut(getActivity())
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    getActivity().setResult(RES_CODE_SIGNED_OUT);
+                                    getActivity().finish();
+                                } else {
+                                    ((MiniScoreboardPreferenceActivity) getActivity())
+                                            .showSnackbar(R.string.sign_out_failed);
+                                }
+                            });
+                    return true;
                 });
 
         findPreference(getString(R.string.pref_key_pref_delete_acct_btn))
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        DeleteAccountDialogFragment newFragment = new DeleteAccountDialogFragment();
-                        newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
-                                MainActivity.DIALOG_TAG);
-                        return true;
-                    }
+                .setOnPreferenceClickListener(preference -> {
+                    DeleteAccountDialogFragment newFragment = new DeleteAccountDialogFragment();
+                    newFragment.show(MiniScoreboardPreferenceFragment.this.getActivity().getSupportFragmentManager(),
+                            MainActivity.DIALOG_TAG);
+                    return true;
                 });
     }
 }

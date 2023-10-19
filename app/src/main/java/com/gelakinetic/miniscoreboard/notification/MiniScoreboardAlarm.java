@@ -29,7 +29,9 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
+
 import androidx.core.app.NotificationCompat;
 
 import com.gelakinetic.miniscoreboard.R;
@@ -51,7 +53,11 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      */
     private static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, MiniScoreboardAlarm.class);
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        int pendingIntentFlags = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntentFlags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+        return PendingIntent.getBroadcast(context, 0, intent, pendingIntentFlags);
     }
 
     /**
@@ -59,31 +65,27 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to set the alarm with
      */
-    public static void setAlarm(Context context, boolean resetting) {
+    public static void setAlarm(Context context) {
 
         /* First, cancel any pending alarms, just in case */
         cancelAlarm(context);
 
-        /* Set the alarm's trigger to the next noon */
+        // Set the alarm to start at approximately noon
         Calendar calendar = Calendar.getInstance();
+
+        // DateFormat sdf = SimpleDateFormat.getDateTimeInstance();
+        // Log.e("CAL", "Set at " + sdf.format(calendar.getTime()));
+
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
 
-        /* If noon already passed, set it to tomorrow's noon
-         * Always add a day if the alarm is being reset
-         */
-        if (resetting || calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DATE, 1);
-        }
+        // calendar.add(Calendar.MINUTE, 1);
+        // Log.e("CAL", "Expire at " + sdf.format(calendar.getTime()));
 
-        /* Set it to repeat daily in an inexact fashion. This saves battery because the system
-         * can bunch together alarms
-         */
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        // With setInexactRepeating(), you have to use one of the AlarmManager interval constants--in this case, AlarmManager.INTERVAL_DAY.
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, getPendingIntent(context));
     }
 
@@ -124,7 +126,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
         }
 
         /* Reschedule the next alarm, this should take care of DST */
-        setAlarm(context, true);
+        setAlarm(context);
     }
 
     /**
@@ -132,19 +134,25 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
      *
      * @param context A Context to build the notification with
      */
-    private static void showNotification(Context context) {
+    public static void showNotification(Context context) {
+
+        int pendingIntentFlags = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntentFlags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
         /* Create an intent to open the mini crossword in a web browser */
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
         notificationIntent.setData(Uri.parse(context.getString(R.string.mini_crossword_url)));
-        PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent playCrosswordIntent = PendingIntent.getActivity(context, 0, notificationIntent, pendingIntentFlags);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(FROM_NOTIFICATION, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent submitScoreIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent submitScoreIntent = PendingIntent.getActivity(context, 0, intent, pendingIntentFlags | PendingIntent.FLAG_UPDATE_CURRENT);
 
         /* Set the notification parameters */
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_DAILY)
                 .setSmallIcon(R.drawable.ic_stat_notify_puzzle)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(context.getString(R.string.notification_title))
@@ -158,7 +166,8 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
                 .addAction(new NotificationCompat.Action.Builder(
                         R.drawable.ic_file_upload_white_32dp,
                         context.getString(R.string.action_submit_score),
-                        submitScoreIntent).build());
+                        submitScoreIntent).build())
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -167,7 +176,7 @@ public class MiniScoreboardAlarm extends BroadcastReceiver {
             mBuilder = mBuilder.setVibrate(new long[]{0, 500, 500, 500});
         }
 
-            /* If the user has sounds enabled, add a ding */
+        /* If the user has sounds enabled, add a ding */
         if (preferenceManager.getBoolean(context.getString(R.string.pref_key_daily_notification_sound), false)) {
             mBuilder = mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         }

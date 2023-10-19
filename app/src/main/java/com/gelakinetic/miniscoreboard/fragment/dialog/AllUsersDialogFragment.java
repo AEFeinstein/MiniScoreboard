@@ -20,12 +20,12 @@
 package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
@@ -68,15 +68,12 @@ public class AllUsersDialogFragment extends DialogFragment {
 
         /* Display the dialog */
         return new AlertDialog.Builder(getContext())
-                .setItems(usernames, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        /* Find the one StatsFragment, tell it to switch the user */
-                        for (Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
-                            if (fragment instanceof StatsFragment) {
-                                ((StatsFragment) fragment).setUser(mUids[i]);
-                                return;
-                            }
+                .setItems(usernames, (dialogInterface, i) -> {
+                    /* Find the one StatsFragment, tell it to switch the user */
+                    for (Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
+                        if (fragment instanceof StatsFragment) {
+                            ((StatsFragment) fragment).setUser(mUids[i]);
+                            return;
                         }
                     }
                 })
@@ -84,7 +81,7 @@ public class AllUsersDialogFragment extends DialogFragment {
                 .show();
     }
 
-    private class UsernameUidPair implements Comparable<UsernameUidPair> {
+    private static class UsernameUidPair implements Comparable<UsernameUidPair> {
         final String mUsername;
         final String mUid;
 

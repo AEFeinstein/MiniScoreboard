@@ -19,12 +19,15 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
@@ -43,8 +46,6 @@ import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
 
 public class HistoryFragment extends MiniScoreboardFragment {
 
@@ -65,7 +66,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String key) {
             /* Get the object from the database */
-            Long date = Long.parseLong(dataSnapshot.getKey());
+            long date = Long.parseLong(dataSnapshot.getKey());
 
             /* Make an entry for a whole day's worth of scores */
             DatabaseDailyEntry dailyEntry = new DatabaseDailyEntry(date);
@@ -110,7 +111,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String key) {
             /* Get the object from the database */
-            Long date = Long.parseLong(dataSnapshot.getKey());
+            long date = Long.parseLong(dataSnapshot.getKey());
 
             /* Make an entry for a whole day's worth of scores */
             DatabaseDailyEntry dailyEntry = new DatabaseDailyEntry(date);
@@ -282,11 +283,7 @@ public class HistoryFragment extends MiniScoreboardFragment {
             @Override
             public void onBindChildViewHolder(ScoreEntryHolder childViewHolder, int position,
                                               Object childListItem) {
-                if (((DatabaseScoreEntry) childListItem).mUid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    childViewHolder.setBold(true);
-                } else {
-                    childViewHolder.setBold(false);
-                }
+                childViewHolder.setBold(((DatabaseScoreEntry) childListItem).mUid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()));
                 childViewHolder.setTitleText(((DatabaseScoreEntry) childListItem).mUsername);
                 childViewHolder.setPuzzleTimeText(((DatabaseScoreEntry) childListItem).getPuzzleTime());
             }

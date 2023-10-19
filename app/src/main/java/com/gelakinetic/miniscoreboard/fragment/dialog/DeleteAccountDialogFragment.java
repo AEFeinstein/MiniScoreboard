@@ -19,10 +19,15 @@
 
 package com.gelakinetic.miniscoreboard.fragment.dialog;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -43,11 +48,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
-
 public class DeleteAccountDialogFragment extends DialogFragment {
 
 
@@ -56,7 +56,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
     int mPendingTasks = 0;
     boolean mFoundNewWinners = false;
 
-    private OnCompleteListener<Void> mRemoveDataCompleteListener = new OnCompleteListener<Void>() {
+    private final OnCompleteListener<Void> mRemoveDataCompleteListener = new OnCompleteListener<Void>() {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
             /* Wait for all tasks to complete, including finding new winners */
@@ -64,23 +64,20 @@ public class DeleteAccountDialogFragment extends DialogFragment {
             if (mNumCompetedTasks == mPendingTasks && mFoundNewWinners) {
                 /* Delete the user */
                 FirebaseAuth.getInstance().getCurrentUser()
-                        .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            /* Account deleted, finish the activity */
-                            mActivity.setResult(MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED);
-                            mActivity.finish();
-                        } else {
-                            /* Account delete failed, display a message */
-                            String message = mActivity.getString(R.string.delete_account_failed);
-                            if (task.getException() != null) {
-                                message += ": " + task.getException().getMessage();
+                        .delete().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                /* Account deleted, finish the activity */
+                                mActivity.setResult(MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED);
+                                mActivity.finish();
+                            } else {
+                                /* Account delete failed, display a message */
+                                String message = mActivity.getString(R.string.delete_account_failed);
+                                if (task1.getException() != null) {
+                                    message += ": " + task1.getException().getMessage();
+                                }
+                                mActivity.showSnackbar(message);
                             }
-                            mActivity.showSnackbar(message);
-                        }
-                    }
-                });
+                        });
             }
         }
     };
@@ -103,12 +100,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.pref_delete_acct_title)
                 .setMessage(R.string.delete_account_dialog_message)
-                .setPositiveButton(R.string.delete_account_dialog_positive, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        deleteAccount();
-                    }
-                })
+                .setPositiveButton(R.string.delete_account_dialog_positive, (dialogInterface, i) -> deleteAccount())
                 .setNegativeButton(R.string.delete_account_dialog_negative, null)
                 .create();
     }
@@ -200,7 +192,7 @@ public class DeleteAccountDialogFragment extends DialogFragment {
                                 for (String winner : winners) {
                                     mPendingTasks++;
                                     database.child(KEY_DAILY_WINNERS)
-                                            .child(daySnapshot.toString() + "-" + winners.indexOf(winner))
+                                            .child(daySnapshot + "-" + winners.indexOf(winner))
                                             .setValue(winner)
                                             .addOnCompleteListener(mRemoveDataCompleteListener);
                                 }

@@ -19,16 +19,18 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartEntry;
@@ -52,11 +54,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
 
 public class StatsFragment extends MiniScoreboardFragment {
 
@@ -90,7 +90,7 @@ public class StatsFragment extends MiniScoreboardFragment {
 
             /* Insert, sorted, into the array, notify the adapter */
             int index = Collections.binarySearch(mStatisticsEntries, entry,
-                    new DatabaseScoreEntry().new DateComparator());
+                    new DatabaseScoreEntry.DateComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -116,7 +116,7 @@ public class StatsFragment extends MiniScoreboardFragment {
             /* Find where it is in the daily entries array */
             int oldIndex = mStatisticsEntries.indexOf(entry);
             /* See where it would go */
-            int newIndex = Collections.binarySearch(mStatisticsEntries, entry, new DatabaseScoreEntry().new DateComparator());
+            int newIndex = Collections.binarySearch(mStatisticsEntries, entry, new DatabaseScoreEntry.DateComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -400,12 +400,12 @@ public class StatsFragment extends MiniScoreboardFragment {
      */
     private static String formatTime(double seconds, boolean hundreths) {
         if (hundreths) {
-            return String.format("%01d:%02d.%02d",
+            return String.format(Locale.getDefault(), "%01d:%02d.%02d",
                     ((int) seconds) / 60,
                     ((int) seconds) % 60,
                     (int) ((seconds - ((int) seconds)) * 100));
         } else {
-            return String.format("%01d:%02d",
+            return String.format(Locale.getDefault(), "%01d:%02d",
                     ((int) seconds) / 60,
                     ((int) seconds) % 60);
         }
@@ -468,11 +468,11 @@ public class StatsFragment extends MiniScoreboardFragment {
         }
 
         /* Color the bars, first get the color array */
-        int colors[] = getResources().getIntArray(R.array.barColors);
+        int[] colors = getResources().getIntArray(R.array.barColors);
         int colorIdx = 0;
 
         /* Get and sort the keys from the hash map */
-        Integer keySet[] = new Integer[mBarsHashMap.size()];
+        Integer[] keySet = new Integer[mBarsHashMap.size()];
         mBarsHashMap.keySet().toArray(keySet);
         Arrays.sort(keySet);
 

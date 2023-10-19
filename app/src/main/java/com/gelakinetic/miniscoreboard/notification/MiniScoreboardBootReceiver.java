@@ -22,6 +22,7 @@ package com.gelakinetic.miniscoreboard.notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.preference.PreferenceManager;
 
 import com.gelakinetic.miniscoreboard.R;
@@ -42,7 +43,7 @@ public class MiniScoreboardBootReceiver extends BroadcastReceiver {
             if (PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(context.getString(R.string.pref_key_daily_notification), false)) {
                 /* alarm is enabled */
-                MiniScoreboardAlarm.setAlarm(context, false);
+                MiniScoreboardAlarm.setAlarm(context);
             } else {
                 /* alarm is disabled */
                 MiniScoreboardAlarm.cancelAlarm(context);

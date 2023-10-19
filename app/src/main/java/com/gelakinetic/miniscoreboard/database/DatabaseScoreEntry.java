@@ -78,7 +78,7 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
     public String getPuzzleTime() {
         int minutes = mPuzzleTime / 60;
         int seconds = mPuzzleTime % 60;
-        return String.format("%d:%02d", minutes, seconds);
+        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds);
     }
 
     /**
@@ -112,7 +112,7 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
                 && mUid.equals(((DatabaseScoreEntry) obj).mUid);
     }
 
-    public class TimeComparator implements Comparator<DatabaseScoreEntry> {
+    public static class TimeComparator implements Comparator<DatabaseScoreEntry> {
 
         /**
          * Compare two DatabaseScoreEntrys based on puzzle time
@@ -135,7 +135,7 @@ public class DatabaseScoreEntry implements Comparable<DatabaseScoreEntry> {
         }
     }
 
-    public class DateComparator implements Comparator<DatabaseScoreEntry> {
+    public static class DateComparator implements Comparator<DatabaseScoreEntry> {
 
         /**
          * Compare two DatabaseScoreEntrys based on date

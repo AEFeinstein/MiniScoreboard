@@ -20,18 +20,18 @@
 package com.gelakinetic.miniscoreboard.fragment.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.gelakinetic.miniscoreboard.R;
 
@@ -69,10 +69,7 @@ public class AboutDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.app_name) + " " + versionName)
                 .setView(dialogLayout)
-                .setPositiveButton(R.string.thanks, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setPositiveButton(R.string.thanks, (dialogInterface, i) -> {
                 })
                 .show();
     }

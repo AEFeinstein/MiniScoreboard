@@ -19,16 +19,20 @@
 
 package com.gelakinetic.miniscoreboard.fragment;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PUZZLE_TIME;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.activity.MainActivity;
@@ -46,9 +50,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
-
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PUZZLE_TIME;
 
 public class DailyFragment extends MiniScoreboardFragment {
 
@@ -70,7 +71,7 @@ public class DailyFragment extends MiniScoreboardFragment {
 
             /* Insert, sorted, into the array, notify the adapter */
             int index = Collections.binarySearch(mDailyEntries, entry,
-                    new DatabaseScoreEntry().new TimeComparator());
+                    new DatabaseScoreEntry.TimeComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -96,7 +97,7 @@ public class DailyFragment extends MiniScoreboardFragment {
             /* Find where it is in the daily entries array */
             int oldIndex = mDailyEntries.indexOf(entry);
             /* See where it would go */
-            int newIndex = Collections.binarySearch(mDailyEntries, entry, new DatabaseScoreEntry().new TimeComparator());
+            int newIndex = Collections.binarySearch(mDailyEntries, entry, new DatabaseScoreEntry.TimeComparator());
             /* binarySearch returns the non-negative index of the element, or a negative index
              * which is the -index - 1 where the element would be inserted.
              */
@@ -232,11 +233,7 @@ public class DailyFragment extends MiniScoreboardFragment {
              */
             @Override
             public void onBindViewHolder(ScoreEntryHolder holder, int position) {
-                if (mDailyEntries.get(position).mUid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    holder.setBold(true);
-                } else {
-                    holder.setBold(false);
-                }
+                holder.setBold(mDailyEntries.get(position).mUid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()));
                 holder.setTitleText(mDailyEntries.get(position).mUsername);
                 holder.setPuzzleTimeText(mDailyEntries.get(position).getPuzzleTime());
             }
@@ -262,13 +259,10 @@ public class DailyFragment extends MiniScoreboardFragment {
                 .getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(calendar.getTime());
         ((TextView) view.findViewById(R.id.date_text_view)).setText(date);
 
-        view.findViewById(R.id.play_puzzle_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent crosswordIntent = new Intent(Intent.ACTION_VIEW);
-                crosswordIntent.setData(Uri.parse(getString(R.string.mini_crossword_url)));
-                startActivity(crosswordIntent);
-            }
+        view.findViewById(R.id.play_puzzle_button).setOnClickListener(view1 -> {
+            Intent crosswordIntent = new Intent(Intent.ACTION_VIEW);
+            crosswordIntent.setData(Uri.parse(getString(R.string.mini_crossword_url)));
+            startActivity(crosswordIntent);
         });
 
         return view;

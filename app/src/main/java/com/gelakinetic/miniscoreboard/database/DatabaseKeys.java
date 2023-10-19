@@ -26,5 +26,4 @@ public class DatabaseKeys {
     public static final String KEY_USERS = "users";
 
     public static final String KEY_PUZZLE_TIME = "mPuzzleTime";
-    public static final String KEY_PUZZLE_SIZE = "mPuzzleSize";
 }

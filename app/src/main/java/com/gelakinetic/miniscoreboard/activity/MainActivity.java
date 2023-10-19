@@ -19,24 +19,27 @@
 
 package com.gelakinetic.miniscoreboard.activity;
 
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
+import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.MainThread;
-import androidx.annotation.StringRes;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.gelakinetic.miniscoreboard.R;
 import com.gelakinetic.miniscoreboard.database.DatabaseScoreEntry;
@@ -50,7 +53,11 @@ import com.gelakinetic.miniscoreboard.fragment.dialog.AllUsersDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.dialog.ScoreInputDialogFragment;
 import com.gelakinetic.miniscoreboard.fragment.dialog.UserNameInputDialogFragment;
 import com.gelakinetic.miniscoreboard.notification.MiniScoreboardAlarm;
+import com.gelakinetic.miniscoreboard.notification.NotificationHelper;
 import com.gelakinetic.miniscoreboard.ui.ViewPagerAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -62,11 +69,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_DAILY_WINNERS;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_PERSONAL_SCORES;
-import static com.gelakinetic.miniscoreboard.database.DatabaseKeys.KEY_USERS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -104,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
                     if (prefKey.equals(getString(R.string.pref_key_daily_notification))) {
                         if (mSharedPreferences.getBoolean(prefKey, false)) {
-                            MiniScoreboardAlarm.setAlarm(MainActivity.this, false);
+                            NotificationHelper.requestNotificationPermission(MainActivity.this);
+                            MiniScoreboardAlarm.setAlarm(MainActivity.this);
                         } else {
                             MiniScoreboardAlarm.cancelAlarm(MainActivity.this);
                         }
@@ -192,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        NotificationHelper.createChannels(this);
+
         /* Make sure the user is authenticated */
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mCurrentUser == null) {
@@ -229,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                         setupViewPager(mViewPager);
 
                         /* Hide the progress bar */
-                        showIndeterminateProgressBar(false);
+                        showIndeterminateProgressBar();
 
                         /* If the app was launched from the notification, now is the time to
                          * click the fab
@@ -250,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                         /* TODO some error handling */
                     }
                 });
-        
+
         /* Set up the root view */
         setContentView(R.layout.activity_main);
         mRootView = findViewById(android.R.id.content);
@@ -264,12 +269,9 @@ public class MainActivity extends AppCompatActivity {
 
         /* Set up the FloatingActionButton */
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ScoreInputDialogFragment newFragment = new ScoreInputDialogFragment();
-                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
-            }
+        mFab.setOnClickListener(view -> {
+            ScoreInputDialogFragment newFragment = new ScoreInputDialogFragment();
+            newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
         });
         mFab.hide();
 
@@ -363,26 +365,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.menu_settings: {
-                Intent in = new Intent();
-                in.putExtra(UserNameInputDialogFragment.USERNAME_KEY, getUserNameFromUid(mCurrentUser.getUid()));
-                in.setClass(MainActivity.this, MiniScoreboardPreferenceActivity.class);
-                startActivityForResult(in, REQ_CODE_SETTINGS);
-                return true;
-            }
-            case R.id.menu_about: {
-                AboutDialogFragment newFragment = new AboutDialogFragment();
-                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
-                return true;
-            }
-            case R.id.menu_change_user: {
-                AllUsersDialogFragment newFragment = new AllUsersDialogFragment();
-                newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_settings) {
+            Intent in = new Intent();
+            in.putExtra(UserNameInputDialogFragment.USERNAME_KEY, getUserNameFromUid(mCurrentUser.getUid()));
+            in.setClass(MainActivity.this, MiniScoreboardPreferenceActivity.class);
+            startActivityForResult(in, REQ_CODE_SETTINGS);
+            return true;
+        } else if (itemId == R.id.menu_about) {
+            AboutDialogFragment newFragment = new AboutDialogFragment();
+            newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+            return true;
+        } else if (itemId == R.id.menu_change_user) {
+            AllUsersDialogFragment newFragment = new AllUsersDialogFragment();
+            newFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -396,29 +395,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQ_CODE_SETTINGS: {
-                switch (resultCode) {
-                    case MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED: {
-                        startActivity(AuthUiActivity.createIntent(this));
-                        finish();
-                        break;
-                    }
-                    case MiniScoreboardPreferenceFragment.RES_CODE_SIGNED_OUT: {
-                        startActivity(AuthUiActivity.createIntent(this));
-                        finish();
-                        break;
-                    }
-                    case MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED: {
-                        /* Close & reopen this activity */
-                        finish();
-                        startActivity(new Intent(this, MainActivity.class));
-                    }
+        if (requestCode == REQ_CODE_SETTINGS) {
+            switch (resultCode) {
+                case MiniScoreboardPreferenceFragment.RES_CODE_ACCT_DELETED:
+                case MiniScoreboardPreferenceFragment.RES_CODE_SIGNED_OUT: {
+                    startActivity(AuthUiActivity.createIntent(this));
+                    finish();
+                    break;
                 }
-                break;
-            }
-            default: {
-                break;
+                case MiniScoreboardPreferenceFragment.RES_CODE_USERNAME_CHANGED: {
+                    /* Close & reopen this activity */
+                    finish();
+                    startActivity(new Intent(this, MainActivity.class));
+                }
             }
         }
 
@@ -492,13 +481,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (mChangeUserMenuItem != null) {
-                if (((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton()) {
-                    /* Show it */
-                    mChangeUserMenuItem.setVisible(true);
-                } else {
-                    /* Hide it */
-                    mChangeUserMenuItem.setVisible(false);
-                }
+                mChangeUserMenuItem.setVisible(((MiniScoreboardFragment) mViewPagerAdapter.getFragment(position)).shouldShowChangeUsersButton());
             }
         }
     }
@@ -585,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
                                 /* Submit the data, first to daily scores then to personal scores. */
                                 for (String winner : winners) {
                                     database.child(KEY_DAILY_WINNERS)
-                                            .child(Long.toString(date) + "-" + winners.indexOf(winner))
+                                            .child(date + "-" + winners.indexOf(winner))
                                             .setValue(winner);
                                 }
                             }
@@ -614,14 +597,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Show or hide an indeterminate progress bar (spinny circle)
-     *
-     * @param shouldShow true to show the progress bar, false to hide it
      */
-    private void showIndeterminateProgressBar(boolean shouldShow) {
-        if (shouldShow) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            mProgressBar.setVisibility(View.GONE);
-        }
+    private void showIndeterminateProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 }
