@@ -70,6 +70,7 @@ along with Mini Scoreboard.  If not, see <http://www.gnu.org/licenses/>.
 
         <receiver
             android:name=".notification.MiniScoreboardAlarm"
+            android:exported="true"
             android:enabled="true" />
 
     </application>
